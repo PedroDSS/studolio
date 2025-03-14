@@ -1,17 +1,6 @@
 services:
   backend:
-    build:
-      context: ./backend
-      args:
-        AIRTABLE_KEY: $AIRTABLE_KEY
-        AIRTABLE_BDD: $AIRTABLE_BDD
-        AIRTABLE_TECHNO: $AIRTABLE_TECHNO
-        AIRTABLE_PROMO: $AIRTABLE_PROMO
-        AIRTABLE_CATEGORIE: $AIRTABLE_CATEGORIE
-        AIRTABLE_ETUDIANT: $AIRTABLE_ETUDIANT
-        AIRTABLE_ADMIN: $AIRTABLE_ADMIN
-        AIRTABLE_PROJET: $AIRTABLE_PROJET
-        AIRTABLE_COMMENT: $AIRTABLE_COMMENT
+    build: ./backend
     ports:
       - "3000:3000"
     volumes:
@@ -19,3 +8,17 @@ services:
       - /app/node_modules
     env_file:
       - .env
+
+  frontend-nuxt:
+    build: ./frontend-nuxt
+    ports:
+      - "3001:3001"
+    volumes:
+      - ./frontend-nuxt:/app
+      - /app/node_modules
+    env_file:
+      - .env
+
+volumes:
+  backend:
+  frontend-nuxt:
