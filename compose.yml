@@ -18,7 +18,18 @@ services:
       - /app/node_modules
     env_file:
       - .env
+  
+  frontend-react:
+    build: ./frontend-react
+    ports:
+      - "3002:3002"
+    volumes:
+      - ./frontend-react:/app
+      - /app/node_modules
+    env_file:
+      - .env
 
 volumes:
   backend:
   frontend-nuxt:
+  frontend-react:
