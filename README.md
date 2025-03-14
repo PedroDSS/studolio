@@ -83,6 +83,7 @@ To be determined.
 ### Lancer le projet
 ```bash
 To be determined.
+docker compose down && docker compose up --build -d
 ```
 
 ---

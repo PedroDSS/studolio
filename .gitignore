@@ -1,5 +1,47 @@
+.vscode/
+.fleet
+
+# dependencies (bun install)
+node_modules
+node_modules/
+/node_modules/
+
+# output
+out
+dist
+*.tgz
+.output
+.data
+.nuxt
+.nitro
+
+# code coverage
+coverage
+*.lcov
+
+# logs
+logs
+_.log
+*.log
+report.[0-9]_.[0-9]_.[0-9]_.[0-9]_.json
+
+# dotenv environment variable files
+.env
+.env.*
+
+# caches
+.eslintcache
+.cache
+*.tsbuildinfo
+.lock.*
+
+# IntelliJ based IDEs
+.idea
+
+# Finder (MacOS) folder config
 .DS_Store
 .DS_Store?
-.vscode/
-node_modules/
-.env
+
+# React Router
+/.react-router/
+/build/
