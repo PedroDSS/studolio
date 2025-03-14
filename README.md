@@ -44,12 +44,6 @@ Le projet est divisé en **deux parties** :
 
 ## Technologies Utilisées
 
-**Base de données** : AirTable
-**Back End** : Bun (ou Node.js si ça fonctionne pas)
-**Front End | PortFolio** : Nuxt.JS
-**Front End | Admin** : React (React Router v7)
-**Docker**
-
 ### Backend
 - **Bun ou Node.js + Express** (API pour interagir avec Airtable)
 - **JWT + bcrypt** (authentification et sécurité des mots de passe)
