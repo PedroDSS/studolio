@@ -44,7 +44,6 @@ Le projet est divisé en **deux parties** :
 
 ## Technologies Utilisées
 
-## Technos choisis
 **Base de données** : AirTable
 **Back End** : Bun (ou Node.js si ça fonctionne pas)
 **Front End | PortFolio** : Nuxt.JS
