@@ -86,6 +86,11 @@ To be determined.
 docker compose down && docker compose up --build -d
 ```
 
+### Remplir la base de données
+```bash
+docker exec -it studolio_backend_1 /bin/sh
+bun seed
+```
 ---
 
 **Projet réalisé dans le cadre du cours Airtable Avancée - ESGI 5IW2**
