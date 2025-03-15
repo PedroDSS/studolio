@@ -1,7 +1,7 @@
 import { database } from "../../utils/db.server";
-import type { Admin } from "../../interfaces/administrateur";
+import type { AirtableResponse } from "../../interfaces/airtableResponse";
 
-export async function getAdmins(): Promise<Admin[]> {
+export async function getAdmins(): Promise<AirtableResponse[]> {
   try {
     const records = await database(process.env.AIRTABLE_ADMIN as string)
       .select()

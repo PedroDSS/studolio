@@ -7,4 +7,12 @@ export default defineNuxtConfig({
       apiUrl: process.env.VITE_API_URL,
     },
   },
+  tailwindcss: {
+    config: {},
+    cssPath: ["~/assets/css/tailwind.css", { injectPosition: "first" }],
+    editorSupport: true,
+    exposeConfig: false,
+    viewer: { endpoint: "/_tailwind", exportViewer: true },
+  },
+  modules: ["@nuxtjs/tailwindcss"],
 });
