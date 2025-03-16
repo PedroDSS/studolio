@@ -1,4 +1,5 @@
 import { database } from "../utils/db.server";
+import { hashPassword } from "../utils/hashPassword";
 
 export async function seedAdmin() {
   const admins = [
@@ -7,10 +8,7 @@ export async function seedAdmin() {
         Nom: "Jane",
         Prenom: "Doe",
         Email: "jane.doe@example.com",
-        "Mot de passe": await Bun.password.hash("password123", {
-          algorithm: "bcrypt",
-          cost: 10,
-        }),
+        "Mot de passe": await hashPassword("password123"),
       },
     },
     {
@@ -18,10 +16,7 @@ export async function seedAdmin() {
         Nom: "John",
         Prenom: "Smith",
         Email: "john.smith@example.com",
-        "Mot de passe": await Bun.password.hash("password456", {
-          algorithm: "bcrypt",
-          cost: 10,
-        }),
+        "Mot de passe": await hashPassword("password456"),
       },
     },
   ];
