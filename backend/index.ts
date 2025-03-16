@@ -1,5 +1,6 @@
 import { adminsRoutes } from "./routes/adminsRoutes";
 import { loginRoute } from "./routes/loginRoute";
+import { updatePasswordRoute } from "./routes/updatePasswordRoute";
 
 const allowedOrigins = [process.env.NUXT_URL, process.env.REACT_URL];
 
@@ -31,6 +32,9 @@ Bun.serve({
       }
       case url.pathname.startsWith("/login"): {
         return loginRoute(req, url, headers);
+      }
+      case url.pathname.startsWith("/updatePassword"): {
+        return updatePasswordRoute(req, url, headers);
       }
       default: {
         return new Response("Not Found", { status: 404, headers });

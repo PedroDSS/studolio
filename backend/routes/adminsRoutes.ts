@@ -1,4 +1,6 @@
-import { createAdmin, getAdmin, getAdmins } from "../hooks";
+import { createAdmin } from "../hooks/Administrateur/createAdmin";
+import { getAdmin } from "../hooks/Administrateur/getAdmin";
+import { getAdmins } from "../hooks/Administrateur/getAdmins";
 import { updateAdmin } from "../hooks/Administrateur/updateAdmin";
 import type {
   Administrateur,

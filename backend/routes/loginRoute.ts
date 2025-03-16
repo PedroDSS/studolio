@@ -1,4 +1,4 @@
-import { connectAdmin } from "../hooks";
+import { connectAdmin } from "../hooks/Administrateur/connectAdmin";
 import type { Login } from "../interfaces/login";
 
 export async function loginRoute(
