@@ -4,3 +4,5 @@ export interface Administrateur {
   Email: string;
   "Mot de passe": string;
 }
+
+export type UpdateAdministrateur = Omit<Administrateur, "Mot de passe">;
