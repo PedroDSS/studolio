@@ -1,4 +1,5 @@
 import { adminsRoutes } from "./routes/adminsRoutes";
+import { etudiantsRoutes } from "./routes/etudiantsRoutes";
 import { loginRoute } from "./routes/loginRoute";
 import { updatePasswordRoute } from "./routes/updatePasswordRoute";
 
@@ -35,6 +36,9 @@ Bun.serve({
       }
       case url.pathname.startsWith("/updatePassword"): {
         return updatePasswordRoute(req, url, headers);
+      }
+      case url.pathname.startsWith("/etudiants"): {
+        return etudiantsRoutes(req, url, headers);
       }
       default: {
         return new Response("Not Found", { status: 404, headers });
