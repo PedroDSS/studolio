@@ -1,22 +1,22 @@
-import type { AirtableResponse } from "../../interfaces/airtableResponse";
-import { getAdmin } from "./getAdmin";
 import { getAdmins } from "./getAdmins";
+import { getToken } from "../../utils/jwtToken";
 
 export async function connectAdmin(
   email: string,
   password: string
-): Promise<AirtableResponse | void> {
+): Promise<string | Response> {
   const allAdmins = await getAdmins();
   const admin = allAdmins.find((admin) => admin.fields.Email === email);
   if (!admin) {
-    throw new Error("Admin not found");
+    return new Response("Admin not found", { status: 404 });
   }
   const isPasswordCorrect = await Bun.password.verify(
     password,
     admin.fields["Mot de passe"] as string
   );
   if (isPasswordCorrect) {
-    return await getAdmin(admin.id);
+    const accessToken = await getToken({ id: admin.id }, "1s");
+    return accessToken;
   }
-  throw new Error("Wrong Password !");
+  return new Response("Wrong password", { status: 401 });
 }

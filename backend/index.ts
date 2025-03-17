@@ -1,6 +1,9 @@
 import { adminsRoutes } from "./routes/adminsRoutes";
+import { categoriesRoutes } from "./routes/categoriesRoutes";
 import { etudiantsRoutes } from "./routes/etudiantsRoutes";
 import { loginRoute } from "./routes/loginRoute";
+import { promotionsRoutes } from "./routes/promotionsRoutes";
+import { technosRoutes } from "./routes/technosRoutes";
 import { updatePasswordRoute } from "./routes/updatePasswordRoute";
 
 const allowedOrigins = [process.env.NUXT_URL, process.env.REACT_URL];
@@ -39,6 +42,15 @@ Bun.serve({
       }
       case url.pathname.startsWith("/etudiants"): {
         return etudiantsRoutes(req, url, headers);
+      }
+      case url.pathname.startsWith("/technos"): {
+        return technosRoutes(req, url, headers);
+      }
+      case url.pathname.startsWith("/promotions"): {
+        return promotionsRoutes(req, url, headers);
+      }
+      case url.pathname.startsWith("/categories"): {
+        return categoriesRoutes(req, url, headers);
       }
       default: {
         return new Response("Not Found", { status: 404, headers });
