@@ -1,3 +1,8 @@
+import { Elysia } from "elysia";
+import { cors } from "@elysiajs/cors";
+import { jwt } from "@elysiajs/jwt";
+import { swagger } from '@elysiajs/swagger'
+
 import { adminsRoutes } from "./routes/adminsRoutes";
 import { categoriesRoutes } from "./routes/categoriesRoutes";
 import { etudiantsRoutes } from "./routes/etudiantsRoutes";
@@ -6,55 +11,30 @@ import { promotionsRoutes } from "./routes/promotionsRoutes";
 import { technosRoutes } from "./routes/technosRoutes";
 import { updatePasswordRoute } from "./routes/updatePasswordRoute";
 
-const allowedOrigins = [process.env.NUXT_URL, process.env.REACT_URL];
+const app = new Elysia()
+  .use(cors({
+    origin: process.env.NUXT_URL || process.env.REACT_URL || "*",
+    methods: ["GET", "POST", "PUT", "DELETE"],
+  }))
 
-Bun.serve({
-  async fetch(req: Request): Promise<Response> {
-    const url = new URL(req.url);
+  .use(jwt({
+    name: "jwt",
+    secret: process.env.JWT_SECRET_ACCESS_TOKEN || "la-super-cle-secrete",
+  }))
 
-    const origin = req.headers.get("Origin");
-    const headers: { [key: string]: string } = {
-      "Content-Type": "application/json",
-      "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, OPTIONS",
-      "Access-Control-Allow-Headers": "Content-Type, Authorization",
-      "Access-Control-Allow-Origin": "",
-    };
+  // Access to swagger with <base_url>/swagger
+  // Note: The documentation is not correctly filled because documentation for each route is missing.
+  .use(swagger())
+  .use(adminsRoutes)
+  .use(categoriesRoutes)
+  .use(etudiantsRoutes)
+  .use(loginRoute)
+  .use(promotionsRoutes)
+  .use(technosRoutes)
+  .use(updatePasswordRoute)
 
-    if (origin && allowedOrigins.includes(origin)) {
-      headers["Access-Control-Allow-Origin"] = origin;
-    }
+  // Base route in order to check if Elysia API is working correctly.
+  .get("/", () => "This API is made with Elysia.JS !")
 
-    if (req.method === "OPTIONS") {
-      return new Response(null, {
-        headers,
-      });
-    }
-
-    switch (true) {
-      case url.pathname.startsWith("/admins"): {
-        return adminsRoutes(req, url, headers);
-      }
-      case url.pathname.startsWith("/login"): {
-        return loginRoute(req, url, headers);
-      }
-      case url.pathname.startsWith("/updatePassword"): {
-        return updatePasswordRoute(req, url, headers);
-      }
-      case url.pathname.startsWith("/etudiants"): {
-        return etudiantsRoutes(req, url, headers);
-      }
-      case url.pathname.startsWith("/technos"): {
-        return technosRoutes(req, url, headers);
-      }
-      case url.pathname.startsWith("/promotions"): {
-        return promotionsRoutes(req, url, headers);
-      }
-      case url.pathname.startsWith("/categories"): {
-        return categoriesRoutes(req, url, headers);
-      }
-      default: {
-        return new Response("Not Found", { status: 404, headers });
-      }
-    }
-  },
-});
+app.listen(3000);
+console.log(`Started Elysia on URL : http://localhost:3000`);

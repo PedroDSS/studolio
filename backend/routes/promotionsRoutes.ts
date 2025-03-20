@@ -1,63 +1,33 @@
+import { Elysia } from "elysia";
 import { createPromotion } from "../hooks/Promotion/createPromotion";
 import { getPromotion } from "../hooks/Promotion/getPromotion";
 import { getPromotions } from "../hooks/Promotion/getPromotions";
 import { updatePromotion } from "../hooks/Promotion/updatePromotion";
 
-export async function promotionsRoutes(
-  req: Request,
-  url: URL,
-  headers: { [key: string]: string }
-): Promise<Response> {
-  const pathRegexForID = /^\/promotions\/([^\/]+)$/;
+export const promotionsRoutes = new Elysia({ prefix: "/promotions" })
+  .get("/", async () => {
+    return await getPromotions();
+  })
 
-  if (req.method === "GET" && url.pathname === "/promotions") {
-    const promotions = await getPromotions();
-    return new Response(JSON.stringify(promotions), {
-      headers,
-    });
-  }
+  .get("/:id", async ({ params }) => {
+    const { id } = params;
+    if (!id) return new Response("Bad Request: Missing promotion ID", { status: 400 });
 
-  if (req.method === "GET") {
-    const match = url.pathname.match(pathRegexForID);
-    const id = match && match[1];
-    if (id) {
-      const promotion = await getPromotion(id);
-      return new Response(JSON.stringify(promotion), {
-        headers,
-      });
-    }
-    return new Response("Bad Request: Missing promotion ID", {
-      status: 400,
-      headers,
-    });
-  }
+    return await getPromotion(id);
+  })
 
-  if (req.method === "POST" && url.pathname === "/promotions") {
-    const requestBody = (await req.json()) as string;
-    await createPromotion(requestBody);
+  .post("/", async ({ body }) => {
+    if (!body) return new Response("Bad Request: Missing promotion data", { status: 400 });
 
-    return new Response("Promotion created !", {
-      status: 201,
-      headers,
-    });
-  }
+    await createPromotion(body as string);
+    return new Response("Promotion created!", { status: 201 });
+  })
 
-  if (req.method === "PATCH") {
-    const match = url.pathname.match(pathRegexForID);
-    const id = match && match[1];
-    if (id) {
-      const requestBody = (await req.json()) as string;
-      await updatePromotion(id, requestBody);
-      return new Response("Promotion updated!", {
-        status: 200,
-        headers,
-      });
-    }
-    return new Response("Bad Request: Missing promotion ID", {
-      status: 400,
-      headers,
-    });
-  }
+  .patch("/:id", async ({ params, body }) => {
+    const { id } = params;
+    if (!id) return new Response("Bad Request: Missing promotion ID", { status: 400 });
+    if (!body) return new Response("Bad Request: Missing promotion data", { status: 400 });
 
-  return new Response("Not Found", { status: 404 });
-}
+    await updatePromotion(id, body as string);
+    return new Response("Promotion updated!", { status: 200 });
+  });

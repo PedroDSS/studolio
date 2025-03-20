@@ -1,43 +1,25 @@
+import { Elysia } from "elysia";
 import { createAdmin } from "../hooks/Administrateur/createAdmin";
 import { getAdmin } from "../hooks/Administrateur/getAdmin";
 import { getAdmins } from "../hooks/Administrateur/getAdmins";
 import { updateAdmin } from "../hooks/Administrateur/updateAdmin";
-import type {
-  Administrateur,
-  UpdateAdministrateur,
-} from "../interfaces/administrateur";
+import type { Administrateur, UpdateAdministrateur } from "../interfaces/administrateur";
 
-export async function adminsRoutes(
-  req: Request,
-  url: URL,
-  headers: { [key: string]: string }
-): Promise<Response> {
-  const pathRegexForID = /^\/admins\/([^\/]+)$/;
+export const adminsRoutes = new Elysia({ prefix: "/admins" })
+  .get("/", async () => {
+    return await getAdmins();
+  })
 
-  if (req.method === "GET" && url.pathname === "/admins") {
-    const admins = await getAdmins();
-    return new Response(JSON.stringify(admins), {
-      headers,
-    });
-  }
-
-  if (req.method === "GET") {
-    const match = url.pathname.match(pathRegexForID);
-    const id = match && match[1];
-    if (id) {
-      const admin = await getAdmin(id);
-      return new Response(JSON.stringify(admin), {
-        headers,
-      });
+  .get("/:id", async ({ params }) => {
+    const admin = await getAdmin(params.id);
+    if (!admin) {
+      return new Response("Admin not found", { status: 404 });
     }
-    return new Response("Bad Request: Missing admin ID", {
-      status: 400,
-      headers,
-    });
-  }
+    return admin;
+  })
 
-  if (req.method === "POST" && url.pathname === "/admins") {
-    const requestBody = (await req.json()) as Administrateur;
+  .post("/", async ({ body }) => {
+    const requestBody = body as Administrateur;
     await createAdmin({
       Nom: requestBody.Nom,
       Prenom: requestBody.Prenom,
@@ -45,28 +27,11 @@ export async function adminsRoutes(
       "Mot de passe": requestBody["Mot de passe"],
     });
 
-    return new Response("Admin created !", {
-      status: 201,
-      headers,
-    });
-  }
+    return new Response("Admin created!", { status: 201 });
+  })
 
-  if (req.method === "PATCH") {
-    const match = url.pathname.match(pathRegexForID);
-    const id = match && match[1];
-    if (id) {
-      const requestBody = (await req.json()) as UpdateAdministrateur;
-      await updateAdmin(id, requestBody);
-      return new Response("Admin updated!", {
-        status: 200,
-        headers,
-      });
-    }
-    return new Response("Bad Request: Missing admin ID", {
-      status: 400,
-      headers,
-    });
-  }
-
-  return new Response("Not Found", { status: 404 });
-}
+  .patch("/:id", async ({ params, body }) => {
+    const requestBody = body as UpdateAdministrateur;
+    await updateAdmin(params.id, requestBody);
+    return new Response("Admin updated!", { status: 200 });
+  });

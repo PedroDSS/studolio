@@ -1,63 +1,38 @@
+import { Elysia } from "elysia";
 import { createCategorie } from "../hooks/Categorie/createCategorie";
 import { getCategorie } from "../hooks/Categorie/getCategorie";
 import { getCategories } from "../hooks/Categorie/getCategories";
 import { updateCategorie } from "../hooks/Categorie/updateCategorie";
 
-export async function categoriesRoutes(
-  req: Request,
-  url: URL,
-  headers: { [key: string]: string }
-): Promise<Response> {
-  const pathRegexForID = /^\/categories\/([^\/]+)$/;
-
-  if (req.method === "GET" && url.pathname === "/categories") {
+export const categoriesRoutes = new Elysia({ prefix: "/categories" })
+  .get("/", async () => {
     const categories = await getCategories();
-    return new Response(JSON.stringify(categories), {
-      headers,
-    });
-  }
+    return categories;
+  })
 
-  if (req.method === "GET") {
-    const match = url.pathname.match(pathRegexForID);
-    const id = match && match[1];
-    if (id) {
-      const categorie = await getCategorie(id);
-      return new Response(JSON.stringify(categorie), {
-        headers,
-      });
-    }
-    return new Response("Bad Request: Missing categorie ID", {
-      status: 400,
-      headers,
-    });
-  }
+  .get("/:id", async ({ params }) => {
+    const { id } = params;
+    if (!id) return new Response("Bad Request: Missing categorie ID", { status: 400 });
 
-  if (req.method === "POST" && url.pathname === "/categories") {
-    const requestBody = (await req.json()) as string;
-    await createCategorie(requestBody);
+    const categorie = await getCategorie(id);
+    return categorie ? categorie : new Response("Categorie not found", { status: 404 });
+  })
 
-    return new Response("Categorie created !", {
-      status: 201,
-      headers,
-    });
-  }
+  .post("/", async ({ body }) => {
+    if (!body) return new Response("Bad Request: Missing body", { status: 400 });
 
-  if (req.method === "PATCH") {
-    const match = url.pathname.match(pathRegexForID);
-    const id = match && match[1];
-    if (id) {
-      const requestBody = (await req.json()) as string;
-      await updateCategorie(id, requestBody);
-      return new Response("Categorie updated!", {
-        status: 200,
-        headers,
-      });
-    }
-    return new Response("Bad Request: Missing categorie ID", {
-      status: 400,
-      headers,
-    });
-  }
+    //TODO: Rajouter l'interface categorie.
+    await createCategorie(body);
+    return new Response("Categorie created!", { status: 201 });
+  })
 
-  return new Response("Not Found", { status: 404 });
-}
+  .patch("/:id", async ({ params, body }) => {
+    const { id } = params;
+    if (!id) return new Response("Bad Request: Missing categorie ID", { status: 400 });
+
+    if (!body) return new Response("Bad Request: Missing body", { status: 400 });
+
+    await updateCategorie(id, body);
+    return new Response("Categorie updated!", { status: 200 });
+  });
+

@@ -15,7 +15,7 @@ export async function connectAdmin(
     admin.fields["Mot de passe"] as string
   );
   if (isPasswordCorrect) {
-    const accessToken = await getToken({ id: admin.id }, "1s");
+    const accessToken = await getToken({ id: admin.id }, "1d");
     return accessToken;
   }
   return new Response("Wrong password", { status: 401 });

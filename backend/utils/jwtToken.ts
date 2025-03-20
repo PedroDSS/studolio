@@ -12,7 +12,12 @@ export async function getToken(
     signJwt.setExpirationTime(expireIn);
   }
 
-  return await signJwt.sign(
-    new TextEncoder().encode(process.env.JWT_SECRET_ACCESS_TOKEN)
-  );
+  try {
+    const token = await signJwt.sign(
+      new TextEncoder().encode(process.env.JWT_SECRET_ACCESS_TOKEN || "la-super-cle-secrete")
+    );
+    return token;
+  } catch {
+    throw new Error("Error while generating token.");
+  }
 }

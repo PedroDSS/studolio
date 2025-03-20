@@ -1,63 +1,33 @@
+import { Elysia } from "elysia";
 import { createTechno } from "../hooks/Techno/createTechno";
 import { getTechno } from "../hooks/Techno/getTechno";
 import { getTechnos } from "../hooks/Techno/getTechnos";
 import { updateTechno } from "../hooks/Techno/updateTechno";
 
-export async function technosRoutes(
-  req: Request,
-  url: URL,
-  headers: { [key: string]: string }
-): Promise<Response> {
-  const pathRegexForID = /^\/technos\/([^\/]+)$/;
+export const technosRoutes = new Elysia({ prefix: "/technos" })
+  .get("/", async () => {
+    return await getTechnos();
+  })
 
-  if (req.method === "GET" && url.pathname === "/technos") {
-    const technos = await getTechnos();
-    return new Response(JSON.stringify(technos), {
-      headers,
-    });
-  }
+  .get("/:id", async ({ params }) => {
+    const { id } = params;
+    if (!id) return new Response("Bad Request: Missing techno ID", { status: 400 });
 
-  if (req.method === "GET") {
-    const match = url.pathname.match(pathRegexForID);
-    const id = match && match[1];
-    if (id) {
-      const techno = await getTechno(id);
-      return new Response(JSON.stringify(techno), {
-        headers,
-      });
-    }
-    return new Response("Bad Request: Missing techno ID", {
-      status: 400,
-      headers,
-    });
-  }
+    return await getTechno(id);
+  })
 
-  if (req.method === "POST" && url.pathname === "/technos") {
-    const requestBody = (await req.json()) as string;
-    await createTechno(requestBody);
+  .post("/", async ({ body }) => {
+    if (!body) return new Response("Bad Request: Missing techno data", { status: 400 });
 
-    return new Response("Techno created !", {
-      status: 201,
-      headers,
-    });
-  }
+    await createTechno(body as string);
+    return { message: "Techno created!" };
+  })
 
-  if (req.method === "PATCH") {
-    const match = url.pathname.match(pathRegexForID);
-    const id = match && match[1];
-    if (id) {
-      const requestBody = (await req.json()) as string;
-      await updateTechno(id, requestBody);
-      return new Response("Techno updated!", {
-        status: 200,
-        headers,
-      });
-    }
-    return new Response("Bad Request: Missing techno ID", {
-      status: 400,
-      headers,
-    });
-  }
+  .patch("/:id", async ({ params, body }) => {
+    const { id } = params;
+    if (!id) return new Response("Bad Request: Missing techno ID", { status: 400 });
+    if (!body) return new Response("Bad Request: Missing techno data", { status: 400 });
 
-  return new Response("Not Found", { status: 404 });
-}
+    await updateTechno(id, body as string);
+    return { message: "Techno updated!" };
+  });

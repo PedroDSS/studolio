@@ -1,64 +1,37 @@
+import { Elysia } from "elysia";
 import { createEtudiant } from "../hooks/Etudiant/createEtudiant";
 import { getEtudiant } from "../hooks/Etudiant/getEtudiant";
 import { getEtudiants } from "../hooks/Etudiant/getEtudiants";
 import { updateEtudiant } from "../hooks/Etudiant/updateEtudiant";
 import type { Etudiant } from "../interfaces/etudiant";
 
-export async function etudiantsRoutes(
-  req: Request,
-  url: URL,
-  headers: { [key: string]: string }
-): Promise<Response> {
-  const pathRegexForID = /^\/etudiants\/([^\/]+)$/;
-
-  if (req.method === "GET" && url.pathname === "/etudiants") {
+export const etudiantsRoutes = new Elysia({ prefix: "/etudiants" })
+  .get("/", async () => {
     const etudiants = await getEtudiants();
-    return new Response(JSON.stringify(etudiants), {
-      headers,
-    });
-  }
+    return etudiants;
+  })
 
-  if (req.method === "GET") {
-    const match = url.pathname.match(pathRegexForID);
-    const id = match && match[1];
+  .get("/:id", async ({ params }) => {
+    const { id } = params;
+    if (!id) return new Response("Bad Request: Missing etudiant ID", { status: 400 });
 
-    if (id) {
-      const etudiant = await getEtudiant(id);
-      return new Response(JSON.stringify(etudiant), {
-        headers,
-      });
-    }
-    return new Response("Bad Request: Missing etudiant ID", {
-      status: 400,
-      headers,
-    });
-  }
+    const etudiant = await getEtudiant(id);
+    return etudiant ? etudiant : new Response("Etudiant not found", { status: 404 });
+  })
 
-  if (req.method === "POST" && url.pathname === "/etudiants") {
-    const requestBody = (await req.json()) as Etudiant;
-    await createEtudiant(requestBody);
+  .post("/", async ({ body }) => {
+    if (!body) return new Response("Bad Request: Missing body", { status: 400 });
 
-    return new Response("Etudiant created !", {
-      status: 201,
-      headers,
-    });
-  }
+    await createEtudiant(body as Etudiant);
+    return new Response("Etudiant created!", { status: 201 });
+  })
 
-  if (req.method === "PATCH") {
-    const match = url.pathname.match(pathRegexForID);
-    const id = match && match[1];
-    if (id) {
-      const requestBody = (await req.json()) as Etudiant;
-      await updateEtudiant(id, requestBody);
-      return new Response("Etudiant updated!", {
-        status: 200,
-        headers,
-      });
-    }
-    return new Response("Bad Request: Missing etudiant ID", {
-      status: 400,
-      headers,
-    });
-  }
-  return new Response("Not Found", { status: 404 });
-}
+  .patch("/:id", async ({ params, body }) => {
+    const { id } = params;
+    if (!id) return new Response("Bad Request: Missing etudiant ID", { status: 400 });
+
+    if (!body) return new Response("Bad Request: Missing body", { status: 400 });
+
+    await updateEtudiant(id, body as Etudiant);
+    return new Response("Etudiant updated!", { status: 200 });
+  });

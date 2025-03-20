@@ -1,48 +1,31 @@
+import { Elysia } from "elysia";
 import * as jose from "jose";
 import { connectAdmin } from "../hooks/Administrateur/connectAdmin";
 import type { Login } from "../interfaces/login";
 
-export async function loginRoute(
-  req: Request,
-  url: URL,
-  headers: { [key: string]: string }
-): Promise<Response> {
-  if (req.method === "GET" && url.pathname === "/login") {
-    const jwtToken = req.headers.get("Authorization")?.split(" ")[1];
-    if (jwtToken) {
-      try {
-        const { payload } = await jose.jwtVerify(
-          jwtToken.replace(/"/g, ""),
-          new TextEncoder().encode(
-            process.env.JWT_SECRET_ACCESS_TOKEN as string
-          ),
-          {
-            algorithms: ["HS256"],
-          }
-        );
-        return new Response(JSON.stringify(payload.id), {
-          headers,
-        });
-      } catch (error) {
-        return new Response("Invalid or expired token", { status: 401 });
-      }
+export const loginRoute = new Elysia({ prefix: "/login" })
+  .get("/", async ({ headers }) => {
+    const authHeader = headers.authorization;
+    if (!authHeader) return new Response("Not authorized", { status: 401 });
+
+    const token = authHeader.split(" ")[1]?.replace(/"/g, "");
+    if (!token) return new Response("Invalid token", { status: 401 });
+
+    try {
+      const payload = jose.decodeJwt(token);
+      return { id: payload.id };
+    } catch (error) {
+      return new Response("Invalid or expired token", { status: 401 });
     }
+  })
 
-    return new Response("Not authorized", { status: 401 });
-  }
+  .post("/", async ({ body }) => {
+    const requestBody = body as Login;
+    const accessToken = await connectAdmin(requestBody.email, requestBody.password);
 
-  if (req.method === "POST" && url.pathname === "/login") {
-    const requestBody = (await req.json()) as Login;
-    const accessToken = await connectAdmin(
-      requestBody.email,
-      requestBody.password
-    );
     if (typeof accessToken === "string") {
-      return new Response(JSON.stringify(accessToken), {
-        headers,
-      });
+      return { token: accessToken };
     }
-    return accessToken;
-  }
-  return new Response("Not Found", { status: 404 });
-}
+
+    return new Response("Unauthorized", { status: 401 });
+  });

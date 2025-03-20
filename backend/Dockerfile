@@ -2,9 +2,10 @@ FROM oven/bun:latest
 
 WORKDIR /app
 
-COPY package*.json ./
+COPY package*.json bun.lock ./
 
-RUN bun install
+# Param is used to keep the same version of dependencies even if new version is available.
+RUN bun install --frozen-lockfile
 
 COPY . .
 
