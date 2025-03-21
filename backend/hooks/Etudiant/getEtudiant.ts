@@ -7,7 +7,11 @@ export async function getEtudiant(id: string): Promise<AirtableResponse> {
   );
 
   return {
-    id: record.id,
-    fields: record.fields,
+    data: [
+      {
+        id: record.id,
+        fields: record.fields,
+      },
+    ],
   };
 }

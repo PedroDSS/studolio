@@ -3,7 +3,11 @@ import { createAdmin } from "../hooks/Administrateur/createAdmin";
 import { getAdmin } from "../hooks/Administrateur/getAdmin";
 import { getAdmins } from "../hooks/Administrateur/getAdmins";
 import { updateAdmin } from "../hooks/Administrateur/updateAdmin";
-import type { Administrateur, UpdateAdministrateur } from "../interfaces/administrateur";
+import type {
+  Administrateur,
+  UpdateAdministrateur,
+} from "../interfaces/administrateur";
+import { deleteAdmin } from "../hooks/Administrateur/deleteAdmin";
 
 export const adminsRoutes = new Elysia({ prefix: "/admins" })
   .get("/", async () => {
@@ -11,27 +15,44 @@ export const adminsRoutes = new Elysia({ prefix: "/admins" })
   })
 
   .get("/:id", async ({ params }) => {
-    const admin = await getAdmin(params.id);
-    if (!admin) {
-      return new Response("Admin not found", { status: 404 });
-    }
-    return admin;
+    const { id } = params;
+    if (!id)
+      return new Response("Bad Request: Missing admin ID", {
+        status: 400,
+      });
+    const admin = await getAdmin(id);
+    return admin ? admin : new Response("Admin not found", { status: 404 });
   })
 
   .post("/", async ({ body }) => {
-    const requestBody = body as Administrateur;
-    await createAdmin({
-      Nom: requestBody.Nom,
-      Prenom: requestBody.Prenom,
-      Email: requestBody.Email,
-      "Mot de passe": requestBody["Mot de passe"],
-    });
+    if (!body)
+      return new Response("Bad Request: Missing body", { status: 400 });
+    const admin = await createAdmin(body as Administrateur);
 
-    return new Response("Admin created!", { status: 201 });
+    return new Response(JSON.stringify(admin), {
+      status: 201,
+    });
+  })
+
+  .delete("/:id", async ({ params }) => {
+    const { id } = params;
+    if (!id)
+      return new Response("Bad Request: Missing admin ID", {
+        status: 400,
+      });
+    await deleteAdmin(id);
+    return new Response("Admin deleted", { status: 204 });
   })
 
   .patch("/:id", async ({ params, body }) => {
-    const requestBody = body as UpdateAdministrateur;
-    await updateAdmin(params.id, requestBody);
-    return new Response("Admin updated!", { status: 200 });
+    const { id } = params;
+    if (!id)
+      return new Response("Bad Request: Missing admin ID", {
+        status: 400,
+      });
+    if (!body)
+      return new Response("Bad Request: Missing body", { status: 400 });
+
+    const admin = await updateAdmin(id, body as UpdateAdministrateur);
+    return new Response(JSON.stringify(admin), { status: 200 });
   });

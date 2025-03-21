@@ -6,10 +6,14 @@ export async function getAdmins(): Promise<AirtableResponse[]> {
     const records = await database(process.env.AIRTABLE_ADMIN as string)
       .select()
       .all();
-    return records.map((record) => ({
-      id: record.id,
-      fields: record.fields,
-    }));
+    return [
+      {
+        data: records.map((record) => ({
+          id: record.id,
+          fields: record.fields,
+        })),
+      },
+    ];
   } catch (error) {
     console.error("Error fetching admins:", error);
     throw error;

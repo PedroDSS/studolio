@@ -20,8 +20,8 @@ export const loginRoute = new Elysia({ prefix: "/login" })
   })
 
   .post("/", async ({ body }) => {
-    const requestBody = body as Login;
-    const accessToken = await connectAdmin(requestBody.email, requestBody.password);
+    const { email, password } = body as Login;
+    const accessToken = await connectAdmin(email, password);
 
     if (typeof accessToken === "string") {
       return { token: accessToken };

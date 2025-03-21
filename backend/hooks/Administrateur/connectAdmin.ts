@@ -1,11 +1,13 @@
-import { getAdmins } from "./getAdmins";
 import { getToken } from "../../utils/jwtToken";
+import { database } from "../../utils/db.server";
 
 export async function connectAdmin(
   email: string,
   password: string
 ): Promise<string | Response> {
-  const allAdmins = await getAdmins();
+  const allAdmins = await database(process.env.AIRTABLE_ADMIN as string)
+    .select()
+    .all();
   const admin = allAdmins.find((admin) => admin.fields.Email === email);
   if (!admin) {
     return new Response("Admin not found", { status: 404 });
