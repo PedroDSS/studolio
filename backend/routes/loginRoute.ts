@@ -1,6 +1,6 @@
 import { Elysia } from "elysia";
 import * as jose from "jose";
-import { connectAdmin } from "../hooks/Administrateur/connectAdmin";
+import { connectAdmin } from "../hooks/adminHook";
 import type { Login } from "../interfaces/login";
 
 export const loginRoute = new Elysia({ prefix: "/login" })

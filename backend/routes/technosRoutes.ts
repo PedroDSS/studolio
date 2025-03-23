@@ -1,13 +1,15 @@
 import { Elysia } from "elysia";
-import { createTechno } from "../hooks/Techno/createTechno";
-import { getTechno } from "../hooks/Techno/getTechno";
-import { getTechnos } from "../hooks/Techno/getTechnos";
-import { updateTechno } from "../hooks/Techno/updateTechno";
+import {
+  getTechnos,
+  getTechno,
+  createTechno,
+  updateTechno,
+  deleteTechno
+} from "../hooks/technoHook";
 import type { Techno } from "../interfaces/techno";
-import { deleteTechno } from "../hooks/Techno/deleteTechno";
 
 export const technosRoutes = new Elysia({ prefix: "/technos" })
-  .get("/", async () => {
+  .get("/", async ({ params }) => {
     return await getTechnos();
   })
 

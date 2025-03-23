@@ -1,5 +1,5 @@
 import { Elysia } from "elysia";
-import { updatePasswordAdmin } from "../hooks/Administrateur/updatePasswordAdmin";
+import { updatePasswordAdmin } from "../hooks/adminHook";
 import type { Administrateur } from "../interfaces/administrateur";
 
 export const updatePasswordRoute = new Elysia({

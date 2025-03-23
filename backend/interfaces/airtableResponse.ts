@@ -1,9 +1,10 @@
 import type { FieldSet } from "airtable";
 
-interface AirtableElement {
+export interface AirtableElement {
   id: string;
   fields: FieldSet;
 }
 export interface AirtableResponse {
-  data: AirtableElement[];
+  count: number;
+  results: AirtableElement[];
 }

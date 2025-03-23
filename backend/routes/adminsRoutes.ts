@@ -1,13 +1,15 @@
 import { Elysia } from "elysia";
-import { createAdmin } from "../hooks/Administrateur/createAdmin";
-import { getAdmin } from "../hooks/Administrateur/getAdmin";
-import { getAdmins } from "../hooks/Administrateur/getAdmins";
-import { updateAdmin } from "../hooks/Administrateur/updateAdmin";
+import {
+  getAdmins,
+  getAdmin,
+  createAdmin,
+  updateAdmin,
+  deleteAdmin
+} from "../hooks/adminHook";
 import type {
   Administrateur,
   UpdateAdministrateur,
 } from "../interfaces/administrateur";
-import { deleteAdmin } from "../hooks/Administrateur/deleteAdmin";
 
 export const adminsRoutes = new Elysia({ prefix: "/admins" })
   .get("/", async () => {

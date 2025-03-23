@@ -1,10 +1,12 @@
 import { Elysia } from "elysia";
-import { createCategorie } from "../hooks/Categorie/createCategorie";
-import { getCategorie } from "../hooks/Categorie/getCategorie";
-import { getCategories } from "../hooks/Categorie/getCategories";
-import { updateCategorie } from "../hooks/Categorie/updateCategorie";
+import {
+  getCategories,
+  getCategorie,
+  createCategorie,
+  updateCategorie,
+  deleteCategorie
+} from "../hooks/categorieHook";
 import type { Categorie } from "../interfaces/categorie";
-import { deleteCategorie } from "../hooks/Categorie/deleteCategorie";
 
 export const categoriesRoutes = new Elysia({ prefix: "/categories" })
   .get("/", async () => {

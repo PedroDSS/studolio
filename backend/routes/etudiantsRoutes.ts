@@ -1,10 +1,12 @@
 import { Elysia } from "elysia";
-import { createEtudiant } from "../hooks/Etudiant/createEtudiant";
-import { getEtudiant } from "../hooks/Etudiant/getEtudiant";
-import { getEtudiants } from "../hooks/Etudiant/getEtudiants";
-import { updateEtudiant } from "../hooks/Etudiant/updateEtudiant";
+import {
+  getEtudiants,
+  getEtudiant,
+  createEtudiant,
+  updateEtudiant,
+  deleteEtudiant
+} from "../hooks/etudiantHook";
 import type { Etudiant } from "../interfaces/etudiant";
-import { deleteEtudiant } from "../hooks/Etudiant/deleteEtudiant";
 
 export const etudiantsRoutes = new Elysia({ prefix: "/etudiants" })
   .get("/", async () => {

@@ -1,10 +1,12 @@
 import { Elysia } from "elysia";
-import { createPromotion } from "../hooks/Promotion/createPromotion";
-import { getPromotion } from "../hooks/Promotion/getPromotion";
-import { getPromotions } from "../hooks/Promotion/getPromotions";
-import { updatePromotion } from "../hooks/Promotion/updatePromotion";
+import {
+  getPromotions,
+  getPromotion,
+  createPromotion,
+  updatePromotion,
+  deletePromotion
+} from "../hooks/promotionHook";
 import type { Promotion } from "../interfaces/promotion";
-import { deletePromotion } from "../hooks/Promotion/deletePromotion";
 
 export const promotionsRoutes = new Elysia({ prefix: "/promotions" })
   .get("/", async () => {
