@@ -1,48 +1,44 @@
-import { getAdmins } from "./routes";
+import { Elysia } from "elysia";
+import { cors } from "@elysiajs/cors";
+import { jwt } from "@elysiajs/jwt";
+import { swagger } from '@elysiajs/swagger'
 
-const allowedOrigins = [process.env.NUXT_URL, process.env.REACT_URL];
+import { adminsRoutes } from "./routes/adminsRoutes";
+import { categoriesRoutes } from "./routes/categoriesRoutes";
+import { commentsRoutes } from "./routes/commentsRoutes";
+import { etudiantsRoutes } from "./routes/etudiantsRoutes";
+import { loginRoute } from "./routes/loginRoute";
+import { promotionsRoutes } from "./routes/promotionsRoutes";
+import { projetsRoutes } from "./routes/projetRoutes";
+import { technosRoutes } from "./routes/technosRoutes";
+import { updatePasswordRoute } from "./routes/updatePasswordRoute";
 
-Bun.serve({
-  async fetch(req: Request): Promise<Response> {
-    const url = new URL(req.url);
-    console.log(url);
+const app = new Elysia()
+  .use(cors({
+    origin: process.env.NUXT_URL || process.env.REACT_URL || "*",
+    methods: ["GET", "POST", "PUT", "DELETE"],
+  }))
 
-    const origin = req.headers.get("Origin");
-    const headers: { [key: string]: string } = {
-      "Content-Type": "application/json",
-      "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, OPTIONS",
-      "Access-Control-Allow-Headers": "Content-Type, Authorization",
-      "Access-Control-Allow-Origin": "",
-    };
+  .use(jwt({
+    name: "jwt",
+    secret: process.env.JWT_SECRET_ACCESS_TOKEN || "la-super-cle-secrete",
+  }))
 
-    if (origin && allowedOrigins.includes(origin)) {
-      headers["Access-Control-Allow-Origin"] = origin;
-    }
+  // Access to swagger with <base_url>/swagger
+  // Note: The documentation is not correctly filled because documentation for each route is missing.
+  .use(swagger())
+  .use(adminsRoutes)
+  .use(categoriesRoutes)
+  .use(commentsRoutes)
+  .use(etudiantsRoutes)
+  .use(loginRoute)
+  .use(promotionsRoutes)
+  .use(projetsRoutes)
+  .use(technosRoutes)
+  .use(updatePasswordRoute)
 
-    if (req.method === "OPTIONS") {
-      return new Response(null, {
-        headers,
-      });
-    }
+  // Base route in order to check if Elysia API is working correctly.
+  .get("/", () => "This API is made with Elysia.JS !")
 
-    switch (url.pathname) {
-      case "/getAdmins": {
-        try {
-          const admins = await getAdmins();
-          return new Response(JSON.stringify(admins), {
-            headers,
-          });
-        } catch (error) {
-          console.error("Error in /getAdmins route:", error);
-          return new Response("Internal Server Error", {
-            status: 500,
-            headers,
-          });
-        }
-      }
-      default: {
-        return new Response("Not Found", { status: 404, headers });
-      }
-    }
-  },
-});
+app.listen(3000);
+console.log(`Started Elysia on URL : http://localhost:3000`);
