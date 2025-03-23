@@ -5,9 +5,9 @@
   "type": "module",
   "scripts": {
     "start": "bun run --watch index.ts",
-    "seed": "bun run ./seeders/seed.ts"
+    "seed": "bun run ./seeders/seed.ts",
+    "preinstall": "bun upgrade",
   },
-  "preinstall": "bun upgrade",
   "devDependencies": {
     "@types/bun": "latest"
   },
