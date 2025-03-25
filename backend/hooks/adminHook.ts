@@ -9,7 +9,7 @@ import type { AirtableElement, AirtableResponse } from "../interfaces/airtableRe
 export async function connectAdmin(
     email: string,
     password: string
-): Promise<string | Response> {
+): Promise<string | typeof Response> {
     const allAdmins = await database(process.env.AIRTABLE_ADMIN as string)
         .select()
         .all();

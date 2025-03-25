@@ -12,13 +12,14 @@ import { promotionsRoutes } from "./routes/promotionsRoutes";
 import { projetsRoutes } from "./routes/projetRoutes";
 import { technosRoutes } from "./routes/technosRoutes";
 import { updatePasswordRoute } from "./routes/updatePasswordRoute";
+import { dashboardRoutes } from "./routes/dashboardRoutes";
 
 const app = new Elysia()
   .use(
     cors({
       origin: [process.env.REACT_URL as string, process.env.NUXT_URL as string],
-      methods: ["GET", "POST", "PUT", "DELETE"],
-      allowedHeaders: ["Access-Control-Allow-Origin"],
+      methods: ["GET", "PATCH", "POST", "PUT", "DELETE"],
+      allowedHeaders: ["Access-Control-Allow-Origin", "Content-Type"],
     })
   )
 
@@ -41,6 +42,7 @@ const app = new Elysia()
   .use(projetsRoutes)
   .use(technosRoutes)
   .use(updatePasswordRoute)
+  .use(dashboardRoutes)
 
   // Base route in order to check if Elysia API is working correctly.
   .get("/", () => "This API is made with Elysia.JS !");

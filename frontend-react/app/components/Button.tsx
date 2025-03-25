@@ -1,16 +1,20 @@
-import { type JSX } from "react";
+import type { JSX, ButtonHTMLAttributes } from "react";
 
 interface IProps {
   ariaLabel: string;
   label: string;
+  customStyle?: string;
   isDisabled?: boolean;
+  type?: ButtonHTMLAttributes<HTMLButtonElement>["type"];
   onClick?: () => void;
 }
 
-export default function Button({
+export function Button({
   ariaLabel,
   label,
+  customStyle,
   isDisabled,
+  type,
   onClick,
 }: IProps): JSX.Element {
   return (
@@ -18,8 +22,9 @@ export default function Button({
       aria-disabled={isDisabled}
       aria-label={ariaLabel}
       disabled={isDisabled}
+      type={type}
       onClick={onClick}
-      className="px-5 py-2 bg-[#125724] text-white rounded text-sm font-bold hover:bg-[#32a852]"
+      className={`px-5 py-2 bg-[#125724] text-white rounded text-sm font-bold hover:bg-[#32a852] ${customStyle}`}
     >
       {label}
     </button>

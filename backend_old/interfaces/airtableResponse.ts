@@ -2,7 +2,8 @@ import type { FieldSet } from "airtable";
 
 export interface AirtableElement {
   id: string;
-  fields: FieldSet;
+  // TODO: retirer le any
+  fields: FieldSet | any;
 }
 export interface AirtableResponse {
   count: number;

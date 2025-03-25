@@ -1,8 +1,8 @@
 import { useState } from "react";
 import { NavLink, Link } from "react-router";
-import Menu from "./icons/Menu";
-import Close from "./icons/Close";
-import Logo from "./icons/Logo";
+import { Close } from "./icons/Close";
+import { Logo } from "./icons/Logo";
+import { Menu } from "./icons/Menu";
 
 interface IProps {
   navLinks: {
@@ -11,12 +11,12 @@ interface IProps {
   }[];
 }
 
-export default function Header({ navLinks }: IProps) {
+export function Header({ navLinks }: IProps) {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   return (
-    <header>
-      <div className="bg-white w-full h-20 mb-1.5 flex items-center justify-center pt-2">
+    <header className="pt-4 px-4">
+      <div className="bg-white w-full h-20 mb-1.5 flex items-center justify-center">
         <Link to={"/"} className="text-[#001205] hover:text-[#32a852]">
           <Logo height={120} width={120} />
         </Link>
@@ -44,6 +44,7 @@ export default function Header({ navLinks }: IProps) {
           <NavLink
             key={index}
             to={navItem.link}
+            onClick={() => setIsMenuOpen(false)}
             className={({ isActive }) =>
               `p-2 text-lg hover:bg-gray-200 hover:text-[#32a852] rounded w-full text-center font-semibold ${
                 isActive ? "border-b-2 border-[#125724]" : ""

@@ -13,7 +13,7 @@ interface IProps {
   defaultValue?: string;
 }
 
-export default function Textarea({
+export function Textarea({
   id,
   name,
   ariaLabel,

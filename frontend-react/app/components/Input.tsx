@@ -1,6 +1,6 @@
 import { useState, type HTMLInputTypeAttribute, type JSX } from "react";
-import OpenEye from "./icons/OpenEye";
-import CloseEye from "./icons/CloseEye";
+import { CloseEye } from "./icons/CloseEye";
+import { OpenEye } from "./icons/OpenEye";
 
 interface IProps {
   ariaLabel: string;
@@ -13,7 +13,7 @@ interface IProps {
   placeholder?: string;
 }
 
-export default function Input({
+export function Input({
   ariaLabel,
   id,
   label,

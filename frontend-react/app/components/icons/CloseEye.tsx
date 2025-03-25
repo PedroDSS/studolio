@@ -1,7 +1,7 @@
 import type { JSX } from "react";
 import type Icons from "./interface/Icons";
 
-export default function CloseEye({
+export function CloseEye({
   height,
   width,
   color = "currentColor",
