@@ -4,6 +4,7 @@ import {
     getProjet,
     createProjet,
     updateProjet,
+    likeProjet,
     deleteProjet
 } from "../hooks/projetHook";
 import type { Projet } from "../interfaces/projet";
@@ -33,16 +34,6 @@ export const projetsRoutes = new Elysia({ prefix: "/projets" })
         return new Response(JSON.stringify(projet), { status: 201 });
     })
 
-    .delete("/:id", async ({ params }) => {
-        const { id } = params;
-        if (!id)
-            return new Response("Bad Request: Missing projet ID", {
-                status: 400,
-            });
-        await deleteProjet(id);
-        return new Response("Projet deleted", { status: 204 });
-    })
-
     .patch("/:id", async ({ params, body }) => {
         const { id } = params;
         if (!id)
@@ -53,4 +44,25 @@ export const projetsRoutes = new Elysia({ prefix: "/projets" })
 
         const projet = await updateProjet(id, body as Projet);
         return new Response(JSON.stringify(projet), { status: 200 });
+    })
+
+    .post("/:id/likes", async ({ params }) => {
+        const { id } = params;
+
+        try {
+            const projet = await likeProjet(id);
+            return projet;
+        } catch (error) {
+            return new Response("Error liking projet", { status: 500 });
+        }
+    })
+
+    .delete("/:id", async ({ params }) => {
+        const { id } = params;
+        if (!id)
+            return new Response("Bad Request: Missing projet ID", {
+                status: 400,
+            });
+        await deleteProjet(id);
+        return new Response("Projet deleted", { status: 204 });
     });

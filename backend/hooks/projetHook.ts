@@ -66,6 +66,26 @@ export async function updateProjet(
     }
 }
 
+export async function likeProjet(id: string): Promise<AirtableElement> {
+    try {
+        const record = await database(process.env.AIRTABLE_PROJET as string).find(id);
+
+        const currentLikes = typeof record.fields.likes === 'number' ? record.fields.likes : 0;
+
+        const updatedRecord = await database(process.env.AIRTABLE_PROJET as string).update(id, {
+            likes: currentLikes + 1,
+        });
+
+        return {
+            id: updatedRecord.id,
+            fields: updatedRecord.fields,
+        };
+    } catch (error) {
+        console.error("Error liking projet:", error);
+        throw error;
+    }
+}
+
 export async function deleteProjet(id: string): Promise<void> {
     await database(process.env.AIRTABLE_PROJET as string).destroy(id);
 }
