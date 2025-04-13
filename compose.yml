@@ -1,11 +1,20 @@
 services:
+  # backend:
+  #   build: ./backend
+  #   ports:
+  #     - "3000:3000"
+  #   volumes:
+  #     - ./backend:/app
+  #     - /app/node_modules
+  #   env_file:
+  #     - .env
+
   backend:
     build: ./backend
     ports:
       - "3000:3000"
     volumes:
       - ./backend:/app
-      - /app/node_modules
     env_file:
       - .env
 
@@ -18,7 +27,7 @@ services:
       - /app/node_modules
     env_file:
       - .env
-  
+
   frontend-react:
     build: ./frontend-react
     ports:

@@ -1,6 +1,19 @@
 .vscode/
 .fleet
 
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+env/
+venv/
+*.env
+
+# FastAPI
+*.db
+*.sqlite3
+
 # dependencies (bun install)
 node_modules
 node_modules/

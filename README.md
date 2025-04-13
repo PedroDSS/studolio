@@ -45,7 +45,7 @@ Le projet est divisé en **deux parties** :
 ## Technologies Utilisées
 
 ### Backend
-- **Bun ou Node.js + Express** (API pour interagir avec Airtable)
+- **FastAPI** (API pour interagir avec Airtable)
 - **JWT + bcrypt** (authentification et sécurité des mots de passe)
 
 ### Base de Données
