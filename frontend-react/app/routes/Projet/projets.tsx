@@ -1,24 +1,27 @@
 import { Fragment } from "react/jsx-runtime";
 import type APIResponse from "~/interfaces/APIResponse";
-import type { Route } from "./+types/promotions";
+import type { Route } from "./+types/projets";
 import { Button, Card } from "~/components";
-import { clientLoader } from "./getPromotions";
-import DeletePromotion, { clientAction } from "./deletePromotion";
+import DeleteProjet, { clientAction } from "./deleteProjet";
 
-export { clientAction, clientLoader };
+export { clientAction };
 
-export default function Promotions({ loaderData }: Route.ComponentProps) {
+export async function clientLoader() {
+  return await (await fetch(`${import.meta.env.VITE_API_URL}/projets/`)).json();
+}
+
+export default function Projets({ loaderData }: Route.ComponentProps) {
   const { count, results } = loaderData;
   return (
     <Fragment>
       <Button
-        ariaLabel="Ajouter une promotion"
-        label="Ajouter une promotion"
+        ariaLabel="Ajouter un projet"
+        label="Ajouter un projet"
         customStyle="self-end"
-        onClick={() => (window.location.href = "/promotions/create")}
+        onClick={() => (window.location.href = "/projets/create")}
       />
       <div className="flex flex-col items-center font-semibold">
-        <h1 className="text-lg">Table - Promotion</h1>
+        <h1 className="text-lg">Table - Projet</h1>
         <span className="text-gray-500 text-xs italic">
           {count} résultat(s)
         </span>
@@ -29,9 +32,10 @@ export default function Promotions({ loaderData }: Route.ComponentProps) {
             key={result.id}
             id={result.id}
             title={result.fields.Nom}
-            linkView={`/promotions/${result.id}`}
-            deleteButton={<DeletePromotion id={result.id} />}
-            linkEdit={`/promotions/update/${result.id}`}
+            desc={result.fields.Description}
+            linkView={`/projets/${result.id}`}
+            deleteButton={<DeleteProjet id={result.id} />}
+            linkEdit={`/projets/update/${result.id}`}
           />
         ))}
       </div>

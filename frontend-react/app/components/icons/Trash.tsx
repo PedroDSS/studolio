@@ -1,5 +1,5 @@
 import type { JSX } from "react";
-import type Icons from "./interface/Icons";
+import type Icons from "../../interfaces/Icons";
 
 export function Trash({
   height,

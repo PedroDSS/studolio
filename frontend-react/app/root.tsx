@@ -73,7 +73,7 @@ export function ErrorBoundary({ error }: Route.ErrorBoundaryProps) {
           </pre>
         )}
         <Button
-          ariaLabel="close modal and reload page"
+          ariaLabel="Reload page"
           label="Reload page"
           onClick={() => window.location.reload()}
         />

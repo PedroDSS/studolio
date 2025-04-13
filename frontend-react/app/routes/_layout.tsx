@@ -17,6 +17,8 @@ export default function Layout(): JSX.Element {
     { link: "/technos", label: "Technos" },
     { link: "/promotions", label: "Promotions" },
     { link: "/categories", label: "Catégories" },
+    { link: "/etudiants", label: "Étudiants" },
+    { link: "/projets", label: "Projets" },
   ];
 
   return (

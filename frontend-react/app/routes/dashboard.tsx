@@ -14,7 +14,7 @@ export async function clientLoader() {
 
 export default function Dashboard({ loaderData }: Route.ComponentProps) {
   const { totalLikes, totalProjets } = loaderData;
-  console.log(totalProjets);
+  // console.log(totalProjets);
   return (
     <h1 className="font-semibold text-3xl after:content-[''] after:block after:w-full after:h-1 after:bg-[#32a852] mb-4">
       Dashboard

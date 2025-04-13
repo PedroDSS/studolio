@@ -1,24 +1,27 @@
 import { Fragment } from "react/jsx-runtime";
 import type APIResponse from "~/interfaces/APIResponse";
-import type { Route } from "./+types/promotions";
+import type { Route } from "./+types/technos";
 import { Button, Card } from "~/components";
-import { clientLoader } from "./getPromotions";
-import DeletePromotion, { clientAction } from "./deletePromotion";
+import DeleteTechno, { clientAction } from "./deleteTechno";
 
-export { clientAction, clientLoader };
+export { clientAction };
 
-export default function Promotions({ loaderData }: Route.ComponentProps) {
+export async function clientLoader() {
+  return await (await fetch(`${import.meta.env.VITE_API_URL}/technos/`)).json();
+}
+
+export default function Technos({ loaderData }: Route.ComponentProps) {
   const { count, results } = loaderData;
   return (
     <Fragment>
       <Button
-        ariaLabel="Ajouter une promotion"
-        label="Ajouter une promotion"
+        ariaLabel="Ajouter une techno"
+        label="Ajouter une techno"
         customStyle="self-end"
-        onClick={() => (window.location.href = "/promotions/create")}
+        onClick={() => (window.location.href = "/technos/create")}
       />
       <div className="flex flex-col items-center font-semibold">
-        <h1 className="text-lg">Table - Promotion</h1>
+        <h1 className="text-lg">Table - Technos</h1>
         <span className="text-gray-500 text-xs italic">
           {count} résultat(s)
         </span>
@@ -29,9 +32,9 @@ export default function Promotions({ loaderData }: Route.ComponentProps) {
             key={result.id}
             id={result.id}
             title={result.fields.Nom}
-            linkView={`/promotions/${result.id}`}
-            deleteButton={<DeletePromotion id={result.id} />}
-            linkEdit={`/promotions/update/${result.id}`}
+            linkView={`/technos/${result.id}`}
+            deleteButton={<DeleteTechno id={result.id} />}
+            linkEdit={`/technos/update/${result.id}`}
           />
         ))}
       </div>
