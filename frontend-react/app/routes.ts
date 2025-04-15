@@ -6,9 +6,9 @@ import {
 } from "@react-router/dev/routes";
 
 export default [
+  index("./routes/index.tsx"),
   layout("./routes/_layout.tsx", [
-    index("./routes/dashboard.tsx"),
-
+    route("dashboard", "./routes/dashboard.tsx"),
     route("technos", "./routes/Techno/technos.tsx"),
     route("technos/create", "./routes/Techno/createTechno.tsx"),
     route("technos/:id", "./routes/Techno/techno.tsx"),

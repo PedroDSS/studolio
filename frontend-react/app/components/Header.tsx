@@ -1,25 +1,38 @@
 import { NavLink } from "react-router";
-import { Logo } from "./icons/Logo";
+import {
+  Menubar,
+  MenubarMenu,
+  MenubarTrigger,
+  MenubarContent,
+  MenubarItem,
+  MenubarSeparator,
+} from "./ui/menubar";
+import { Button } from "./ui/button";
 
-interface IProps {
-  navLinks: {
-    link: string;
-    label: string;
-  }[];
-}
+export function Header() {
+  const navLinks = [
+    { link: "/dashboard", label: "Dashboard" },
+    { link: "/technos", label: "Technos" },
+    { link: "/promotions", label: "Promotions" },
+    { link: "/categories", label: "Catégories" },
+    { link: "/etudiants", label: "Étudiants" },
+    { link: "/projets", label: "Projets" },
+  ];
 
-export function Header({ navLinks }: IProps) {
   return (
-    <header className="flex flex-col items-center justify-center">
-      <Logo height={120} width={120} />
-      <nav className="">
+    <header className="h-16 flex items-center justify-between px-6 shadow-md">
+      <div className="flex items-center gap-4">
+        <span className="text-xl font-bold">Studolio</span>
+      </div>
+
+      <nav className="hidden md:flex gap-6">
         {navLinks.map((navItem, index) => (
           <NavLink
             key={index}
             to={navItem.link}
             className={({ isActive }) =>
-              `p-2 text-lg hover:bg-gray-200 hover:text-[#32a852] rounded w-full text-center font-semibold ${
-                isActive ? "border-b-2 border-[#125724]" : ""
+              `text-lg font-medium hover:text-gray-300 ${
+                isActive ? "underline underline-offset-4" : ""
               }`
             }
           >
@@ -27,6 +40,41 @@ export function Header({ navLinks }: IProps) {
           </NavLink>
         ))}
       </nav>
+
+      <Menubar className="md:hidden">
+        <MenubarMenu>
+          <MenubarTrigger>
+            <Button variant="secondary">Menu</Button>
+          </MenubarTrigger>
+          <MenubarContent>
+            {navLinks.map((navItem, index) => (
+              <MenubarItem key={index}>
+                <NavLink
+                  to={navItem.link}
+                  className={({ isActive }) =>
+                    `block w-full text-left ${
+                      isActive ? "font-bold text-green-800" : ""
+                    }`
+                  }
+                >
+                  {navItem.label}
+                </NavLink>
+              </MenubarItem>
+            ))}
+            <MenubarSeparator />
+            <MenubarItem>
+              <a href="/logout" className="text-red-600">
+                Logout
+              </a>
+            </MenubarItem>
+          </MenubarContent>
+        </MenubarMenu>
+      </Menubar>
+
+      {/* Profile Button */}
+      <Button variant="outline" className="hidden md:block">
+        Profile
+      </Button>
     </header>
   );
 }

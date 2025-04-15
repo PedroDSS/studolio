@@ -14,6 +14,7 @@ class Settings:
     AIRTABLE_PROJET = os.getenv("AIRTABLE_PROJET")
     AIRTABLE_COMMENT = os.getenv("AIRTABLE_COMMENT")
     JWT_SECRET_ACCESS_TOKEN = os.getenv("JWT_SECRET_ACCESS_TOKEN")
+    REACT_URL = os.getenv("REACT_URL")
     ALGORITHM = "HS256"
 
 settings = Settings()

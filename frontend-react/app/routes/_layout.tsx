@@ -12,18 +12,9 @@ export function HydrateFallback() {
 }
 
 export default function Layout(): JSX.Element {
-  const navLinks = [
-    { link: "/", label: "Dashboard" },
-    { link: "/technos", label: "Technos" },
-    { link: "/promotions", label: "Promotions" },
-    { link: "/categories", label: "Catégories" },
-    { link: "/etudiants", label: "Étudiants" },
-    { link: "/projets", label: "Projets" },
-  ];
-
   return (
     <Fragment>
-      <Header navLinks={navLinks} />
+      <Header />
       <main className="flex fex-col justify-center min-h-screen bg-gradient-to-b from-white to-green-100 p-4">
         <div className="bg-white rounded-lg shadow-lg w-full p-4 flex flex-col items-center">
           <Outlet />

@@ -7,6 +7,8 @@ export default async function clientLoader({ params }: Route.ClientLoaderArgs) {
     await fetch(`${import.meta.env.VITE_API_URL}/technos/${params.id}`)
   ).json();
 
+  console.log(techno)
+
   if (techno.fields.Projet) {
     for (const projet of techno.fields.Projet) {
       projects.push(

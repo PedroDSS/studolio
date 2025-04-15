@@ -9,7 +9,8 @@ import {
 
 import type { Route } from "./+types/root";
 import "./app.css";
-import { Button } from "./components";
+import { Alert, AlertDescription, AlertTitle } from "./components/ui/alert";
+import { Button } from "./components/ui/button";
 
 export const links: Route.LinksFunction = () => [
   { rel: "preconnect", href: "https://fonts.googleapis.com" },
@@ -63,21 +64,25 @@ export function ErrorBoundary({ error }: Route.ErrorBoundaryProps) {
   }
 
   return (
-    <div className="fixed inset-0 flex items-center justify-center bg-gradient-to-b from-white to-green-50">
-      <div className="bg-white rounded-lg shadow-lg p-6 max-w-4xl w-full flex flex-col">
-        <h1 className="text-xl font-bold mb-4 self-center">{message}</h1>
-        <p className="mb-4 self-center">{details}</p>
-        {stack && (
-          <pre className="w-full p-4 overflow-x-auto bg-gray-100 rounded mb-4">
-            <code>{stack}</code>
-          </pre>
-        )}
-        <Button
-          ariaLabel="Reload page"
-          label="Reload page"
-          onClick={() => window.location.reload()}
-        />
-      </div>
+    <div className="flex flex-col justify-center items-center h-screen max-w-lg w-full mx-auto px-6 gap-2">
+      <Alert variant="default" className="text-lg p-6">
+        <AlertTitle className="text-2xl">{message}</AlertTitle>
+        <AlertDescription className="text-lg">
+          {details}
+          {stack && (
+            <pre className="w-full p-6 overflow-x-auto bg-gray-100 rounded mb-6 text-sm">
+              <code>{stack}</code>
+            </pre>
+          )}
+        </AlertDescription>
+      </Alert>
+      <Button
+        variant="secondary"
+        aria-label="Reload page"
+        onClick={() => window.location.reload()}
+      >
+        Reload page
+      </Button>
     </div>
   );
 }

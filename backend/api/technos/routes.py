@@ -23,7 +23,8 @@ airtable = AirtableService(settings.AIRTABLE_TECHNO)
 async def get_technos():
     return await get_all_airtable(airtable)
 
-@router.get("/{id}", response_model=Techno, dependencies=[Depends(verify_token)])
+@router.get("/{id}", response_model=Techno, # dependencies=[Depends(verify_token)]
+)
 async def get_techno(id: str):
     return await get_by_id_airtable(airtable, id)
 
