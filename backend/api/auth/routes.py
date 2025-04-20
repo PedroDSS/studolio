@@ -16,7 +16,7 @@ async def login(body: Login):
     if not admin:
         raise HTTPException(status_code=404)
     
-    hashed_password = admin['fields'].get('Mot de passe')
+    hashed_password = admin['fields'].get('Password')
     if not verify_password(body.password, hashed_password):
         raise HTTPException(status_code=401, detail="Unauthorized")
 

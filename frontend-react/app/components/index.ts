@@ -7,10 +7,10 @@ import { Pencil } from "./icons/Pencil";
 import { Trash } from "./icons/Trash";
 import { Button } from "./Button";
 import { Card } from "./Card";
-import { Header } from "./Header";
 import { Input } from "./Input";
 import { Spinner } from "./Spinner";
 import { Textarea } from "./Textarea";
+import { Header } from "./Header";
 
 export {
   Close,

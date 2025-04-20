@@ -4,8 +4,14 @@ from pydantic import BaseModel, Field
 class ProjetFields(BaseModel):
     Nom: str
     Description: str
-    Likes: Optional[int] = 0
-    Mots_cles: List[str] = Field(alias="Mots-clés")
+    Likes: int
+    Mots: str
+    GitHub: str
+    Publié: str
+    Catégorie: List[str]
+    Technos: List[str]
+    Étudiants: List[str]
+    Commentaire: Optional[List[str]] = None
 
 class Projet(BaseModel):
     id: str
@@ -18,7 +24,19 @@ class AirtableProjet(BaseModel):
 class CreateProjet(BaseModel):
     Nom: str
     Description: str
+    Mots: str
+    GitHub: str
+    Catégorie: List[str]
+    Technos: List[str]
+    Étudiants: List[str]
+
 
 class UpdateProjet(BaseModel):
     Nom: str
     Description: str
+    Mots: str
+    GitHub: str
+    Publié: str
+    Catégorie: List[str]
+    Technos: List[str]
+    Étudiants: List[str]

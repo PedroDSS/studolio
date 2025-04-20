@@ -1,5 +1,5 @@
-import type { Route } from "./+types/categories";
-import { useFetcher } from "react-router";
+import type { Route } from "./+types/admin";
+import { redirect, useFetcher } from "react-router";
 import { Spinner } from "~/components";
 import { Trash } from "~/components";
 
@@ -8,7 +8,7 @@ export async function clientAction({ request }: Route.ClientActionArgs) {
   const token = sessionStorage.getItem("token");
   if (formData.get("intent") === "delete") {
     const response = await fetch(
-      `${import.meta.env.VITE_API_URL}/categories/${formData.get("id")}`,
+      `${import.meta.env.VITE_API_URL}/admins/${formData.get("id")}`,
       {
         method: "DELETE",
         headers: {
@@ -20,10 +20,11 @@ export async function clientAction({ request }: Route.ClientActionArgs) {
       const errorData = await response.json();
       throw new Error(errorData.detail || "Une erreur est survenue.");
     }
+
+    return redirect("/admins");
   }
 }
-
-export default function DeleteCategorie({ id }: { id: string }) {
+export default function DeleteAdmin({ id }: { id: string }) {
   const deleteFetcher = useFetcher<typeof clientAction>();
   let busy = deleteFetcher.state !== "idle";
 

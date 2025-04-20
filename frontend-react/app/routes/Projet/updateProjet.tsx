@@ -1,35 +1,72 @@
-import type { Route } from "./+types/updateProjet";
-import { Fragment } from "react/jsx-runtime";
-import { Button, Input, Spinner } from "~/components";
 import { redirect, useFetcher } from "react-router";
-import type APIResponse from "~/interfaces/APIResponse";
+import type { Route } from "./+types/updateProjet";
+import type {
+  CategoryResponse,
+  EtudiantResponse,
+  TechnoResponse,
+} from "~/interfaces/APIResponse";
+import { Fragment } from "react";
+import { Button } from "~/components/ui/button";
+import { Label } from "~/components/ui/label";
+import { Input } from "~/components/ui/input";
+import { Textarea } from "~/components/ui/textarea";
+import { Spinner } from "~/components";
 
 export async function clientLoader({ params }: Route.ClientLoaderArgs) {
-  const projet: APIResponse = await (
-    await fetch(`${import.meta.env.VITE_API_URL}/projets/${params.id}`)
-  ).json();
+  const token = sessionStorage.getItem("token");
+  if (!token) {
+    return redirect("/");
+  }
 
-  const { results: categories } = await (
-    await fetch(`${import.meta.env.VITE_API_URL}/categories/`)
-  ).json();
+  const responseProjet = await fetch(
+    `${import.meta.env.VITE_API_URL}/projets/${params.id}`,
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    }
+  );
+  if (!responseProjet.ok) {
+    const errorData = await responseProjet.json();
+    throw new Error(errorData.detail || "Une erreur est survenue.");
+  }
 
-  const { results: technos } = await (
-    await fetch(`${import.meta.env.VITE_API_URL}/technos/`)
-  ).json();
+  const responseCategories = await fetch(
+    `${import.meta.env.VITE_API_URL}/categories/`,
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    }
+  );
+  const responseTechnos = await fetch(
+    `${import.meta.env.VITE_API_URL}/technos/`,
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    }
+  );
+  const responseEtudiants = await fetch(
+    `${import.meta.env.VITE_API_URL}/etudiants/`,
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    }
+  );
 
-  const { results: etudiants } = await (
-    await fetch(`${import.meta.env.VITE_API_URL}/etudiants/`)
-  ).json();
   return {
-    projet,
-    categories,
-    technos,
-    etudiants,
+    projet: await responseProjet.json(),
+    categories: await responseCategories.json(),
+    technos: await responseTechnos.json(),
+    etudiants: await responseEtudiants.json(),
   };
 }
 
 export async function clientAction({ request }: Route.ClientActionArgs) {
   let formData = await request.formData();
+  const token = sessionStorage.getItem("token");
 
   if (formData.get("intent") === "update") {
     const technos = formData.getAll("technos");
@@ -41,16 +78,17 @@ export async function clientAction({ request }: Route.ClientActionArgs) {
         method: "PATCH",
         headers: {
           "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify({
           Nom: formData.get("nom"),
           Description: formData.get("description"),
-          "Mots-clés": formData.get("mot-clé"),
+          Mots: formData.get("mots"),
           GitHub: formData.get("github"),
           Publié: formData.get("publié"),
           Catégorie: [formData.get("categorie")],
           Technos: technos,
-          Etudiants: etudiants,
+          Étudiants: etudiants,
         }),
       }
     );
@@ -58,115 +96,150 @@ export async function clientAction({ request }: Route.ClientActionArgs) {
   }
 }
 
-export default function UpdatePromotion({ loaderData }: Route.ComponentProps) {
+export default function UpdateProjet({ loaderData }: Route.ComponentProps) {
   const updateFetcher = useFetcher<typeof clientAction>();
   let busy = updateFetcher.state !== "idle";
   const { projet, categories, technos, etudiants } = loaderData;
   return (
     <Fragment>
       <Button
-        ariaLabel="Retour"
-        label="Retour à la liste"
-        customStyle="self-start"
+        variant="outline"
+        className="self-start mb-4"
         onClick={() => (window.location.href = "/projets")}
-      />
-      <h1 className="font-semibold text-2xl after:content-[''] after:block after:w-full after:h-1 after:bg-[#32a852] mb-4">
+      >
+        Retour à la liste
+      </Button>
+      <h1 className="text-3xl font-bold text-gray-800 mb-6">
         Modification du projet
       </h1>
       <updateFetcher.Form
         method="post"
-        className="flex flex-col items-center gap-4"
+        className="flex flex-col gap-6 w-full max-w-lg mx-auto"
       >
         <input type="hidden" name="intent" value="update" />
         <input type="hidden" name="id" value={projet.id} />
-        <Input
-          ariaLabel="Nom du projet"
-          id="nom"
-          label="Nom du projet"
-          name="nom"
-          type="text"
-          defaultValue={projet.fields.Nom}
-        />
-        <div className="flex flex-col gap-2 font-medium text-black">
-          <label htmlFor="description">Description du projet</label>
-          <textarea
-            name="description"
-            id="description"
-            className="w-72 h-12 px-3 bg-white border-2 border-[#001205] rounded"
-            defaultValue={projet.fields.Description}
+        <div className="flex flex-col gap-2">
+          <Label htmlFor="nom" className="text-sm font-medium text-gray-700">
+            Nom du projet
+          </Label>
+          <Input
+            id="nom"
+            name="nom"
+            type="text"
+            defaultValue={projet.fields.Nom}
+            className="border-gray-300 focus:ring-green-500 focus:border-green-500"
           />
         </div>
-        <Input
-          ariaLabel="Mot-clé du projet"
-          id="mot-clé"
-          label="Mot-clé du projet"
-          name="mot-clé"
-          type="text"
-          defaultValue={projet.fields["Mots-clés"]}
-        />
-        <Input
-          ariaLabel="Lien GitHub du projet"
-          id="github"
-          label="Lien GitHub du projet"
-          name="github"
-          type="text"
-          defaultValue={projet.fields.GitHub}
-        />
-        <div className="flex flex-col gap-2 font-medium text-black">
-          <label htmlFor="description">Projet publié ?</label>
+        <div className="flex flex-col gap-2">
+          <Label
+            htmlFor="description"
+            className="text-sm font-medium text-gray-700"
+          >
+            Description du projet
+          </Label>
+          <Textarea
+            id="description"
+            name="description"
+            defaultValue={projet.fields.Description}
+            className="border-gray-300 focus:ring-green-500 focus:border-green-500"
+          />
+        </div>
+        <div className="flex flex-col gap-2">
+          <Label htmlFor="mots" className="text-sm font-medium text-gray-700">
+            Mot-clé du projet
+          </Label>
+          <Input
+            id="mots"
+            name="mots"
+            type="text"
+            defaultValue={projet.fields.Mots}
+            className="border-gray-300 focus:ring-green-500 focus:border-green-500"
+          />
+        </div>
+        <div className="flex flex-col gap-2">
+          <Label htmlFor="github" className="text-sm font-medium text-gray-700">
+            Lien GitHub du projet
+          </Label>
+          <Input
+            id="github"
+            name="github"
+            type="text"
+            defaultValue={projet.fields.GitHub}
+            className="border-gray-300 focus:ring-green-500 focus:border-green-500"
+          />
+        </div>
+        <div className="flex flex-col gap-2">
+          <Label htmlFor="publié" className="text-sm font-medium text-gray-700">
+            Projet publié ?
+          </Label>
           <select
-            name="publié"
             id="publié"
-            className="w-72 h-12 px-3 bg-white border-2 border-[#001205] rounded"
-            defaultValue={projet.fields["Publié"]}
+            name="publié"
+            defaultValue={projet.fields.Publié}
+            className="border border-gray-300 rounded p-2 focus:ring-green-500 focus:border-green-500"
           >
             <option value="False">Non</option>
             <option value="True">Oui</option>
           </select>
         </div>
-        <div className="flex flex-col gap-2 font-medium text-black">
-          <label htmlFor="categorie">Catégorie du projet</label>
-          <select
-            name="categorie"
-            id="categorie"
-            className="w-72 h-12 px-3 bg-white border-2 border-[#001205] rounded"
-            defaultValue={projet.fields.Catégorie[0]}
+        <div className="flex flex-col gap-2">
+          <Label
+            htmlFor="categorie"
+            className="text-sm font-medium text-gray-700"
           >
-            {categories.map((categorie: APIResponse) => (
+            Catégorie du projet
+          </Label>
+          <select
+            id="categorie"
+            name="categorie"
+            defaultValue={projet.fields.Catégorie[0]}
+            className="border border-gray-300 rounded p-2 focus:ring-green-500 focus:border-green-500"
+          >
+            {categories.records.map((categorie: CategoryResponse) => (
               <option key={categorie.id} value={categorie.id}>
                 {categorie.fields.Nom}
               </option>
             ))}
           </select>
         </div>
-        <div className="flex flex-col gap-2 font-medium text-black">
-          <label htmlFor="technos">Technologies utilisées</label>
-          <select
-            name="technos"
-            id="technos"
-            className="w-72 h-32 px-3 bg-white border-2 border-[#001205] rounded"
-            multiple
-            defaultValue={projet.fields.Technos}
+        <div className="flex flex-col gap-2">
+          <Label
+            htmlFor="etudiants"
+            className="text-sm font-medium text-gray-700"
           >
-            {technos.map((techno: APIResponse) => (
-              <option key={techno.id} value={techno.id}>
-                {techno.fields.Nom}
+            Étudiants associés
+          </Label>
+          <select
+            id="etudiants"
+            name="etudiants"
+            multiple
+            defaultValue={projet.fields.Étudiants}
+            className="border border-gray-300 rounded p-2 focus:ring-green-500 focus:border-green-500"
+          >
+            {etudiants.records.map((etudiant: EtudiantResponse) => (
+              <option key={etudiant.id} value={etudiant.id}>
+                {etudiant.fields.Name}
               </option>
             ))}
           </select>
         </div>
-        <div className="flex flex-col gap-2 font-medium text-black">
-          <label htmlFor="etudiants">Étudiants impliqués</label>
-          <select
-            name="etudiants"
-            id="etudiants"
-            className="w-72 h-32 px-3 bg-white border-2 border-[#001205] rounded"
-            multiple
-            defaultValue={projet.fields.Étudiants}
+        <div className="flex flex-col gap-2">
+          <Label
+            htmlFor="technos"
+            className="text-sm font-medium text-gray-700"
           >
-            {etudiants.map((etudiant: APIResponse) => (
-              <option key={etudiant.id} value={etudiant.id}>
-                {etudiant.fields.Nom} {etudiant.fields.Prenom}
+            Technologies utilisées
+          </Label>
+          <select
+            id="technos"
+            name="technos"
+            multiple
+            defaultValue={projet.fields.Technos}
+            className="border border-gray-300 rounded p-2 focus:ring-green-500 focus:border-green-500"
+          >
+            {technos.records.map((techno: TechnoResponse) => (
+              <option key={techno.id} value={techno.id}>
+                {techno.fields.Nom}
               </option>
             ))}
           </select>
@@ -175,10 +248,11 @@ export default function UpdatePromotion({ loaderData }: Route.ComponentProps) {
           <Spinner />
         ) : (
           <Button
-            ariaLabel="Modifier l'étudiant"
-            label="Modifier"
             type="submit"
-          />
+            className="bg-green-600 hover:bg-green-700 text-white"
+          >
+            Modifier le projet
+          </Button>
         )}
       </updateFetcher.Form>
     </Fragment>

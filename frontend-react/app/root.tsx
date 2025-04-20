@@ -5,12 +5,14 @@ import {
   Outlet,
   Scripts,
   ScrollRestoration,
+  useNavigate,
 } from "react-router";
 
 import type { Route } from "./+types/root";
 import "./app.css";
-import { Alert, AlertDescription, AlertTitle } from "./components/ui/alert";
 import { Button } from "./components/ui/button";
+import { Spinner, Logo } from "./components";
+import { useEffect } from "react";
 
 export const links: Route.LinksFunction = () => [
   { rel: "preconnect", href: "https://fonts.googleapis.com" },
@@ -48,6 +50,7 @@ export default function App() {
 }
 
 export function ErrorBoundary({ error }: Route.ErrorBoundaryProps) {
+  const navigate = useNavigate();
   let message = "Oops!";
   let details = "An unexpected error occurred.";
   let stack: string | undefined;
@@ -63,26 +66,28 @@ export function ErrorBoundary({ error }: Route.ErrorBoundaryProps) {
     stack = error.stack;
   }
 
+  useEffect(() => {
+    if (details === "Invalid or expired token") {
+      navigate("/logout");
+    }
+  }, [details, navigate]);
+
   return (
-    <div className="flex flex-col justify-center items-center h-screen max-w-lg w-full mx-auto px-6 gap-2">
-      <Alert variant="default" className="text-lg p-6">
-        <AlertTitle className="text-2xl">{message}</AlertTitle>
-        <AlertDescription className="text-lg">
-          {details}
-          {stack && (
-            <pre className="w-full p-6 overflow-x-auto bg-gray-100 rounded mb-6 text-sm">
-              <code>{stack}</code>
-            </pre>
-          )}
-        </AlertDescription>
-      </Alert>
-      <Button
-        variant="secondary"
-        aria-label="Reload page"
-        onClick={() => window.location.reload()}
-      >
-        Reload page
+    <div className="flex flex-col items-center justify-center min-h-screen">
+      <h1 className="text-2xl font-bold text-red-600 mb-4">{message}</h1>
+      <p className="text-gray-700 mb-6">{details}</p>
+      <Button variant="outline" onClick={() => window.location.reload()}>
+        Recharger la page
       </Button>
+    </div>
+  );
+}
+
+export function HydrateFallback() {
+  return (
+    <div className="h-screen w-screen bg-white flex flex-col gap-4 justify-center items-center">
+      <Logo height={240} width={240} color="#125724" />
+      <Spinner width="64px" height="64px" border="8px" />
     </div>
   );
 }

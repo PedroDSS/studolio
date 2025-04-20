@@ -19,11 +19,11 @@ from core.airtable import (
 router = APIRouter()
 airtable = AirtableService(settings.AIRTABLE_PROJET)
 
-@router.get("/", response_model=AirtableProjet)
+@router.get("/", response_model=AirtableProjet, dependencies=[Depends(verify_token)])
 async def get_projets():
     return await get_all_airtable(airtable)
 
-@router.get("/{id}", response_model=Projet)
+@router.get("/{id}", response_model=Projet, dependencies=[Depends(verify_token)])
 async def get_projet(id: str):
     return await get_by_id_airtable(airtable, id)
 

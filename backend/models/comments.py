@@ -2,7 +2,8 @@ from typing import List, Optional
 from pydantic import BaseModel
 
 class CommentFields(BaseModel):
-    Nom: str
+    Administrateur: List[str]
+    Notes: str
 
 class Comment(BaseModel):
     id: str
@@ -13,7 +14,9 @@ class AirtableComment(BaseModel):
     offset: Optional[str] = None
 
 class CreateComment(BaseModel):
-    Nom: str
+    Administrateur: Optional[List[str]] = None
+    Projet: List[str]
+    Notes: str
 
 class UpdateComment(BaseModel):
-    Nom: Optional[str]
+    Notes: Optional[str]

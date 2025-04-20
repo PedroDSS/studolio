@@ -1,51 +1,106 @@
-import { Fragment } from "react/jsx-runtime";
-import type { Route } from "./+types/etudiant";
-import { Button, Card, Pencil } from "~/components";
-import DeleteEtudiant, { clientAction } from "./deleteEtudiant";
 import clientLoader from "./getEtudiant";
+import { Fragment } from "react";
+import { Button } from "~/components/ui/button";
+import {
+  Card,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "~/components/ui/card";
+import { OpenEye, Pencil } from "~/components";
 import { Link } from "react-router";
+import type { Route } from "./+types/etudiant";
+import DeleteEtudiant, { clientAction } from "./deleteEtudiant";
 
-export { clientAction, clientLoader };
+export { clientLoader, clientAction };
 
-export default function Categorie({ loaderData }: Route.ComponentProps) {
-  const { etudiant, projects, currentPromotion } = loaderData;
+export default function Etudiant({ loaderData }: Route.ComponentProps) {
+  const { etudiant, projets, currentPromotion } = loaderData;
+
   return (
     <Fragment>
       <Button
-        ariaLabel="Retour"
-        label="Retour à la liste"
-        customStyle="self-start"
+        variant="outline"
+        className="mb-4 self-start"
         onClick={() => (window.location.href = "/etudiants")}
-      />
-      <h1 className="text-2xl font-semibold">{etudiant.fields.Name}</h1>
-      <span className="font-light">{currentPromotion}</span>
-      <span className="text-gray-500 text-xs italic ">{etudiant.id}</span>
-      <div className="flex gap-4 mt-4">
-        <Link
-          to={`/etudiants/update/${etudiant.id}`}
-          className="p-2 bg-yellow-400 text-white rounded"
-        >
-          <Pencil height={16} width={16} />
-        </Link>
-        <DeleteEtudiant id={etudiant.id} />
+      >
+        Retour à la liste
+      </Button>
+      <div className="bg-white shadow-lg rounded-lg p-6 mb-6 border border-gray-200">
+        <div className="flex items-center gap-4 mb-4">
+          <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center text-gray-500 text-2xl font-bold">
+            {etudiant.fields.Name.charAt(0).toUpperCase()}
+          </div>
+          <div>
+            <h1 className="text-2xl font-bold text-gray-800">
+              {etudiant.fields.Name}
+            </h1>
+            <p className="text-sm text-gray-500">Étudiant</p>
+          </div>
+        </div>
+
+        <div className="text-gray-600 space-y-2">
+          <p>
+            <strong>Email :</strong> {etudiant.fields.Email}
+          </p>
+          <p>
+            <strong>Promotion :</strong>{" "}
+            {currentPromotion || "Aucune promotion associée"}
+          </p>
+          <p>
+            <strong>ID :</strong> {etudiant.id}
+          </p>
+        </div>
+
+        <div className="mt-6 flex gap-4">
+          <Link
+            to={`/etudiants/update/${etudiant.id}`}
+            className="flex items-center gap-2 px-4 py-2 bg-yellow-400 text-white rounded hover:bg-yellow-500"
+          >
+            <Pencil height={16} width={16} />
+          </Link>
+          <DeleteEtudiant id={etudiant.id} />
+        </div>
       </div>
-      <h2 className="self-start font-semibold text-xl after:content-[''] after:block after:w-full after:h-1 after:bg-[#32a852]">
+      <h2 className="text-2xl font-semibold text-gray-800 mb-4">
         Projets associés
       </h2>
-      {projects.length > 0 ? (
-        <div className="w-full flex flex-wrap justify-between mt-6">
-          {projects.map((projet) => (
+      {projets.length > 0 ? (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {projets.map((projet) => (
             <Card
               key={projet.id}
-              id={projet.id}
-              title={projet.fields.Nom}
-              linkView={`/projets/${projet.id}`}
-              desc={projet.fields.Description}
-            />
+              className="shadow-lg hover:shadow-xl transition-shadow p-6 rounded-xl bg-white"
+            >
+              <CardHeader>
+                <CardTitle className="text-xl font-bold text-gray-800">
+                  {projet.fields.Nom}
+                </CardTitle>
+                <CardDescription className="text-sm text-gray-500">
+                  ID: {projet.id}
+                </CardDescription>
+              </CardHeader>
+              <div className="mt-4 text-gray-600">
+                <p>
+                  <strong>Description :</strong>{" "}
+                  {projet.fields.Description ||
+                    "Aucune description disponible."}
+                </p>
+              </div>
+              <CardFooter className="flex justify-between items-center w-full space-x-4 mt-6">
+                <Link
+                  to={`/projets/${projet.id}`}
+                  className="p-3 rounded bg-green-600 hover:bg-green-700 text-white"
+                >
+                  <OpenEye height={20} width={20} />
+                </Link>
+              </CardFooter>
+            </Card>
           ))}
         </div>
       ) : (
-        <span>Aucun projet associé à cet étudiant.</span>
+        <p className="text-gray-600">Aucun projet associé à cet étudiant.</p>
       )}
     </Fragment>
   );

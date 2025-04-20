@@ -1,57 +1,87 @@
 import { redirect, useFetcher } from "react-router";
 import type { Route } from "./+types/createTechno";
-import type APIResponse from "~/interfaces/APIResponse";
-import { Fragment } from "react/jsx-runtime";
-import { Button, Input, Spinner } from "~/components";
+import { Fragment } from "react";
+import { Button } from "~/components/ui/button";
+import { Input } from "~/components/ui/input";
+import { Label } from "~/components/ui/label";
+import { Spinner } from "~/components";
+
+export async function clientLoader() {
+  const token = sessionStorage.getItem("token");
+  if (!token) {
+    return redirect("/");
+  }
+}
 
 export async function clientAction({ request }: Route.ClientActionArgs) {
   let formData = await request.formData();
+  const token = sessionStorage.getItem("token");
   if (formData.get("intent") === "create") {
-    const newTechno: APIResponse = await (
-      await fetch(`${import.meta.env.VITE_API_URL}/technos/`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          Nom: formData.get("nom"),
-        }),
-      })
-    ).json();
-    return redirect(`/technos/${newTechno.id}`);
+    const response = await fetch(`${import.meta.env.VITE_API_URL}/technos`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify({
+        Nom: formData.get("nom"),
+      }),
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(errorData.detail || "Une erreur est survenue.");
+    }
+    return redirect(`/technos`);
   }
 }
 
 export default function CreateTechno() {
   const createFetcher = useFetcher<typeof clientAction>();
   let busy = createFetcher.state !== "idle";
+
   return (
     <Fragment>
       <Button
-        ariaLabel="Retour"
-        label="Retour à la liste"
-        customStyle="self-start"
+        variant="outline"
+        className="self-start mb-4"
         onClick={() => (window.location.href = "/technos")}
-      />
-      <h1 className="font-semibold text-2xl after:content-[''] after:block after:w-full after:h-1 after:bg-[#32a852] mb-4">
-        Création d'une nouvelle techno
+      >
+        Retour à la liste
+      </Button>
+
+      <h1 className="text-3xl font-bold text-gray-800 mb-6">
+        Création d'une nouvelle technologie
       </h1>
+
       <createFetcher.Form
         method="post"
-        className="flex flex-col items-center gap-4"
+        className="flex flex-col gap-6 w-full max-w-lg mx-auto"
       >
         <input type="hidden" name="intent" value="create" />
-        <Input
-          ariaLabel="Nom de la techno"
-          id="nom"
-          label="Nom de la techno"
-          name="nom"
-          type="text"
-        />
+
+        <div className="flex flex-col gap-2">
+          <Label htmlFor="nom" className="text-sm font-medium text-gray-700">
+            Nom de la technologie
+          </Label>
+          <Input
+            id="nom"
+            name="nom"
+            type="text"
+            placeholder="Entrez le nom de la technologie"
+            className="border-gray-300 focus:ring-green-500 focus:border-green-500"
+          />
+        </div>
+
         {busy ? (
           <Spinner />
         ) : (
-          <Button ariaLabel="Créer la techno" label="Créer" type="submit" />
+          <Button
+            type="submit"
+            className="bg-green-600 hover:bg-green-700 text-white"
+          >
+            Créer la technologie
+          </Button>
         )}
       </createFetcher.Form>
     </Fragment>

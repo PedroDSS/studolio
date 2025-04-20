@@ -28,7 +28,8 @@ async def get_comment(id: str):
     return await get_by_id_airtable(airtable, id)
 
 @router.post("/", response_model=Comment, dependencies=[Depends(verify_token)], status_code=201)
-async def create_comment(comment: CreateComment):
+async def create_comment(comment: CreateComment, payload: dict = Depends(verify_token)):
+    comment.Administrateur = [payload.get("id")]
     return await create_airtable(airtable, comment.dict())
 
 @router.delete("/{id}", dependencies=[Depends(verify_token)], status_code=204)

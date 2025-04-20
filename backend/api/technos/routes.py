@@ -19,12 +19,11 @@ from core.airtable import (
 router = APIRouter()
 airtable = AirtableService(settings.AIRTABLE_TECHNO)
 
-@router.get("/", response_model=AirtableTechno)
+@router.get("/", response_model=AirtableTechno, dependencies=[Depends(verify_token)])
 async def get_technos():
     return await get_all_airtable(airtable)
 
-@router.get("/{id}", response_model=Techno, # dependencies=[Depends(verify_token)]
-)
+@router.get("/{id}", response_model=Techno, dependencies=[Depends(verify_token)])
 async def get_techno(id: str):
     return await get_by_id_airtable(airtable, id)
 

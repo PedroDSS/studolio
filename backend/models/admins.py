@@ -1,7 +1,8 @@
 from typing import List, Optional
-from pydantic import BaseModel, Field
+from pydantic import BaseModel
 
 class AdminFields(BaseModel):
+    Name:str
     Nom: str
     Prenom: str
     Email: str
@@ -18,9 +19,12 @@ class CreateAdministrateur(BaseModel):
     Nom: str
     Prenom: str
     Email: str
-    Mot_de_passe: str = Field(None, alias="Mot de passe")
+    Password: str
 
 class UpdateAdministrateur(BaseModel):
     Nom: Optional[str]
     Prenom: Optional[str]
     Email: Optional[str]
+
+class UpdateAdministrateurPassword(BaseModel):
+    Password: str

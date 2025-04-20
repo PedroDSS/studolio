@@ -19,7 +19,7 @@ from core.airtable import (
 router = APIRouter()
 airtable = AirtableService(settings.AIRTABLE_CATEGORIE)
 
-@router.get("/", response_model=AirtableCategorie)
+@router.get("/", response_model=AirtableCategorie, dependencies=[Depends(verify_token)])
 async def get_categories():
     return await get_all_airtable(airtable, params={"fields[]": ["Nom"]})
 
