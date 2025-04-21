@@ -9,40 +9,33 @@ from models.admins import (
     AirtableAdministrateur,
     UpdateAdministrateurPassword
 )
-from core.airtable import (
-    get_all_airtable,
-    get_by_id_airtable,
-    create_airtable,
-    update_airtable,
-    delete_airtable
-)
 
 router = APIRouter()
 airtable = AirtableService(settings.AIRTABLE_ADMIN)
 
 @router.get("/", response_model=AirtableAdministrateur, dependencies=[Depends(verify_token)])
 async def get_admins():
-    return await get_all_airtable(airtable, params={"fields[]": ["Name","Nom", "Prenom", "Email"]})
+    return await airtable.get_all()
 
 @router.get("/{id}", response_model=Administrateur, dependencies=[Depends(verify_token)])
 async def get_admin(id: str):
-    return await get_by_id_airtable(airtable, id)
+    return await airtable.get_by_id(id)
 
 @router.post("/", response_model=Administrateur, dependencies=[Depends(verify_token)], status_code=201)
 async def create_admin(admin: CreateAdministrateur):
     admin.Password = hash_password(admin.Password)
-    return await create_airtable(airtable, admin.dict())
+    return await airtable.create(admin.dict())
 
 @router.delete("/{id}", dependencies=[Depends(verify_token)], status_code=204)
 async def delete_admin(id: str):
-    await delete_airtable(airtable, id)
+    await airtable.delete(id)
     return Response(status_code=204)
 
 @router.patch("/{id}", response_model=Administrateur, dependencies=[Depends(verify_token)])
 async def update_admin(id: str, admin: UpdateAdministrateur):
-    return await update_airtable(airtable, id, admin.dict())
+    return await airtable.update(id, admin.dict())
 
 @router.patch("/password/{id}", response_model=Administrateur, dependencies=[Depends(verify_token)])
 async def update_admin_password(id: str, admin: UpdateAdministrateurPassword):
     admin.Password = hash_password(admin.Password)
-    return await update_airtable(airtable, id, admin.dict())
+    return await airtable.update(id, admin.dict())

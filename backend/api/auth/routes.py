@@ -10,7 +10,7 @@ airtable = AirtableService(settings.AIRTABLE_ADMIN)
 
 @router.post("/", response_model=LoginResponse)
 async def login(body: Login):
-    all_admins = await get_all_airtable(airtable)
+    all_admins = await airtable.get_all()
     admin = next((admin for admin in all_admins["records"] if admin['fields'].get('Email') == body.email), None)
 
     if not admin:

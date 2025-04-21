@@ -8,34 +8,27 @@ from models.promotions import (
     UpdatePromotion,
     AirtablePromotion
 )
-from core.airtable import (
-    get_all_airtable,
-    get_by_id_airtable,
-    create_airtable,
-    update_airtable,
-    delete_airtable
-)
 
 router = APIRouter()
 airtable = AirtableService(settings.AIRTABLE_PROMO)
 
 @router.get("/", response_model=AirtablePromotion, dependencies=[Depends(verify_token)])
 async def get_promotions():
-    return await get_all_airtable(airtable)
+    return await airtable.get_all()
 
 @router.get("/{id}", response_model=Promotion, dependencies=[Depends(verify_token)])
 async def get_promotion(id: str):
-    return await get_by_id_airtable(airtable, id)
+    return await airtable.get_by_id(id)
 
 @router.post("/", response_model=Promotion, dependencies=[Depends(verify_token)], status_code=201)
 async def create_promotion(promotion: CreatePromotion):
-    return await create_airtable(airtable, promotion.dict())
+    return await airtable.create(promotion.dict())
 
 @router.delete("/{id}", dependencies=[Depends(verify_token)], status_code=204)
 async def delete_promotion(id: str):
-    await delete_airtable(airtable, id)
+    await airtable.delete(id)
     return Response(status_code=204)
 
 @router.patch("/{id}", response_model=Promotion, dependencies=[Depends(verify_token)])
 async def update_promotion(id: str, promotion: UpdatePromotion):
-    return await update_airtable(airtable, id, promotion.dict())
+    return await airtable.update(id, promotion.dict())
