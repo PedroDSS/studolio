@@ -14,7 +14,7 @@ export default async function clientLoader({ params }: Route.ClientLoaderArgs) {
     return redirect("/");
   }
   const responseEtudiant = await fetch(
-    `${import.meta.env.VITE_API_URL}/etudiants/${params.id}`,
+    `${import.meta.env.VITE_BACKEND_API_URL}/etudiants/${params.id}`,
     {
       headers: {
         Authorization: `Bearer ${token}`,
@@ -31,7 +31,7 @@ export default async function clientLoader({ params }: Route.ClientLoaderArgs) {
   if (etudiant.fields.Promotion) {
     for (const promotion of etudiant.fields.Promotion) {
       const result = await (
-        await fetch(`${import.meta.env.VITE_API_URL}/promotions/${promotion}`, {
+        await fetch(`${import.meta.env.VITE_BACKEND_API_URL}/promotions/${promotion}`, {
           headers: {
             Authorization: `Bearer ${token}`,
           },
@@ -44,7 +44,7 @@ export default async function clientLoader({ params }: Route.ClientLoaderArgs) {
     for (const projet of etudiant.fields.Projet) {
       projets.push(
         await (
-          await fetch(`${import.meta.env.VITE_API_URL}/projets/${projet}`, {
+          await fetch(`${import.meta.env.VITE_BACKEND_API_URL}/projets/${projet}`, {
             headers: {
               Authorization: `Bearer ${token}`,
             },

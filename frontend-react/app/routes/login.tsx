@@ -16,7 +16,9 @@ export async function clientLoader() {
 export async function clientAction({ request }: Route.ClientActionArgs) {
   let formData = await request.formData();
   if (formData.get("intent") === "login") {
-    const response = await fetch(`${import.meta.env.VITE_API_URL}/login/`, {
+    console.log("MON IMPORT DE LURL ?????");
+    console.log(import.meta.env.VITE_BACKEND_API_URL);
+    const response = await fetch(`${import.meta.env.VITE_BACKEND_API_URL}/login/`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

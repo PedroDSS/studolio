@@ -9,7 +9,7 @@ export default async function clientLoader({ params }: Route.ClientLoaderArgs) {
     return redirect("/");
   }
   const responseAdmin = await fetch(
-    `${import.meta.env.VITE_API_URL}/admins/${params.id}`,
+    `${import.meta.env.VITE_BACKEND_API_URL}/admins/${params.id}`,
     {
       headers: {
         Authorization: `Bearer ${token}`,

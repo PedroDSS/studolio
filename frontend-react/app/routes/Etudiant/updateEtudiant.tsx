@@ -20,7 +20,7 @@ export async function clientLoader({ params }: Route.ClientLoaderArgs) {
     return redirect("/");
   }
   const responsePromotion = await fetch(
-    `${import.meta.env.VITE_API_URL}/promotions/`,
+    `${import.meta.env.VITE_BACKEND_API_URL}/promotions/`,
     {
       headers: {
         Authorization: `Bearer ${token}`,
@@ -28,7 +28,7 @@ export async function clientLoader({ params }: Route.ClientLoaderArgs) {
     }
   );
   const responseEtudiant = await fetch(
-    `${import.meta.env.VITE_API_URL}/etudiants/${params.id}`,
+    `${import.meta.env.VITE_BACKEND_API_URL}/etudiants/${params.id}`,
     {
       headers: {
         Authorization: `Bearer ${token}`,
@@ -57,7 +57,7 @@ export async function clientAction({ request }: Route.ClientActionArgs) {
   const token = sessionStorage.getItem("token");
   if (formData.get("intent") === "update") {
     await fetch(
-      `${import.meta.env.VITE_API_URL}/etudiants/${formData.get("id")}`,
+      `${import.meta.env.VITE_BACKEND_API_URL}/etudiants/${formData.get("id")}`,
       {
         method: "PATCH",
         headers: {

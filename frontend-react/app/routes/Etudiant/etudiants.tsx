@@ -21,7 +21,7 @@ export async function clientLoader() {
   if (!token) {
     return redirect("/");
   }
-  const response = await fetch(`${import.meta.env.VITE_API_URL}/etudiants/`, {
+  const response = await fetch(`${import.meta.env.VITE_BACKEND_API_URL}/etudiants/`, {
     headers: {
       Authorization: `Bearer ${token}`,
     },

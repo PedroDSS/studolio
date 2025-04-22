@@ -19,7 +19,7 @@ export default async function clientLoader({ params }: Route.ClientLoaderArgs) {
   }
 
   const responseProjet = await fetch(
-    `${import.meta.env.VITE_API_URL}/projets/${params.id}`,
+    `${import.meta.env.VITE_BACKEND_API_URL}/projets/${params.id}`,
     {
       headers: {
         Authorization: `Bearer ${token}`,
@@ -37,7 +37,7 @@ export default async function clientLoader({ params }: Route.ClientLoaderArgs) {
     for (const techno of projet.fields.Technos) {
       technos.push(
         await (
-          await fetch(`${import.meta.env.VITE_API_URL}/technos/${techno}`, {
+          await fetch(`${import.meta.env.VITE_BACKEND_API_URL}/technos/${techno}`, {
             headers: {
               Authorization: `Bearer ${token}`,
             },
@@ -51,7 +51,7 @@ export default async function clientLoader({ params }: Route.ClientLoaderArgs) {
     for (const etudiant of projet.fields["Étudiants"]) {
       etudiants.push(
         await (
-          await fetch(`${import.meta.env.VITE_API_URL}/etudiants/${etudiant}`, {
+          await fetch(`${import.meta.env.VITE_BACKEND_API_URL}/etudiants/${etudiant}`, {
             headers: {
               Authorization: `Bearer ${token}`,
             },
@@ -64,7 +64,7 @@ export default async function clientLoader({ params }: Route.ClientLoaderArgs) {
   if (projet.fields.Commentaire) {
     for (const commentaire of projet.fields.Commentaire) {
       const commentData = await (
-        await fetch(`${import.meta.env.VITE_API_URL}/comments/${commentaire}`, {
+        await fetch(`${import.meta.env.VITE_BACKEND_API_URL}/comments/${commentaire}`, {
           headers: {
             Authorization: `Bearer ${token}`,
           },
@@ -73,8 +73,7 @@ export default async function clientLoader({ params }: Route.ClientLoaderArgs) {
       if (commentData.fields.Administrateur) {
         const authorData = await (
           await fetch(
-            `${import.meta.env.VITE_API_URL}/admins/${
-              commentData.fields.Administrateur
+            `${import.meta.env.VITE_BACKEND_API_URL}/admins/${commentData.fields.Administrateur
             }`,
             {
               headers: {
@@ -95,7 +94,7 @@ export default async function clientLoader({ params }: Route.ClientLoaderArgs) {
   if (projet.fields["Catégorie"]) {
     for (const categorie of projet.fields["Catégorie"]) {
       const result = await (
-        await fetch(`${import.meta.env.VITE_API_URL}/categories/${categorie}`, {
+        await fetch(`${import.meta.env.VITE_BACKEND_API_URL}/categories/${categorie}`, {
           headers: {
             Authorization: `Bearer ${token}`,
           },

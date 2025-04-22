@@ -26,7 +26,7 @@ export async function clientLoader() {
     return redirect("/");
   }
   const responseCategories = await fetch(
-    `${import.meta.env.VITE_API_URL}/categories/`,
+    `${import.meta.env.VITE_BACKEND_API_URL}/categories/`,
     {
       headers: {
         Authorization: `Bearer ${token}`,
@@ -39,7 +39,7 @@ export async function clientLoader() {
   }
 
   const responseTechnos = await fetch(
-    `${import.meta.env.VITE_API_URL}/technos/`,
+    `${import.meta.env.VITE_BACKEND_API_URL}/technos/`,
     {
       headers: {
         Authorization: `Bearer ${token}`,
@@ -52,7 +52,7 @@ export async function clientLoader() {
   }
 
   const responseEtudiants = await fetch(
-    `${import.meta.env.VITE_API_URL}/etudiants/`,
+    `${import.meta.env.VITE_BACKEND_API_URL}/etudiants/`,
     {
       headers: {
         Authorization: `Bearer ${token}`,
@@ -78,7 +78,7 @@ export async function clientAction({ request }: Route.ClientActionArgs) {
     const technos = formData.getAll("technos");
     const etudiants = formData.getAll("etudiants");
     const newProjet: ProjetResponse = await (
-      await fetch(`${import.meta.env.VITE_API_URL}/projets/`, {
+      await fetch(`${import.meta.env.VITE_BACKEND_API_URL}/projets/`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

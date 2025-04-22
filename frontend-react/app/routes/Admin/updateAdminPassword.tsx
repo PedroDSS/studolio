@@ -13,7 +13,7 @@ export async function clientLoader({ params }: Route.ClientLoaderArgs) {
     return redirect("/");
   }
   const responseAdmin = await fetch(
-    `${import.meta.env.VITE_API_URL}/admins/${params.id}`,
+    `${import.meta.env.VITE_BACKEND_API_URL}/admins/${params.id}`,
     {
       headers: {
         Authorization: `Bearer ${token}`,
@@ -35,7 +35,7 @@ export async function clientAction({ request }: Route.ClientActionArgs) {
   const token = sessionStorage.getItem("token");
   if (formData.get("intent") === "updatePassword") {
     const response = await fetch(
-      `${import.meta.env.VITE_API_URL}/admins/password/${formData.get("id")}`,
+      `${import.meta.env.VITE_BACKEND_API_URL}/admins/password/${formData.get("id")}`,
       {
         method: "PATCH",
         headers: {
@@ -72,7 +72,7 @@ export default function UpdateAdminPassword({
       </p>
       <updatePassword.Form method="post" className="flex flex-col gap-6">
         <input type="hidden" name="intent" value="updatePassword" />
-        <input type="hidden" name="id" value={admin.id}/>
+        <input type="hidden" name="id" value={admin.id} />
         <div className="flex flex-col gap-2">
           <Label
             htmlFor="password"

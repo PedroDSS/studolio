@@ -12,7 +12,7 @@ export async function clientLoader({ params }: Route.ClientLoaderArgs) {
     return redirect("/");
   }
   const responseProjet = await fetch(
-    `${import.meta.env.VITE_API_URL}/projets/${params.id}`,
+    `${import.meta.env.VITE_BACKEND_API_URL}/projets/${params.id}`,
     {
       headers: {
         Authorization: `Bearer ${token}`,
@@ -37,7 +37,7 @@ export async function clientAction({
   const token = sessionStorage.getItem("token");
 
   if (formData.get("intent") === "createComment") {
-    await fetch(`${import.meta.env.VITE_API_URL}/comments/`, {
+    await fetch(`${import.meta.env.VITE_BACKEND_API_URL}/comments/`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -48,7 +48,7 @@ export async function clientAction({
         Notes: formData.get("notes"),
       }),
     });
-    
+
     return redirect(`/projets/${params.id}`);
   }
 }

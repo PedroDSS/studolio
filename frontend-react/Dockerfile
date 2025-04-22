@@ -10,7 +10,7 @@ COPY . .
 
 EXPOSE 5173
 
-CMD ["npm", "run", "dev", "--", "--host", "0.0.0.0", "--port", "3002"]
+CMD ["npm", "run", "dev", "--", "--host", "0.0.0.0", "--port", "5173"]
 
 # Dockerfile created by React Router
 # FROM node:20-alpine AS development-dependencies-env

@@ -19,7 +19,7 @@ export async function clientAction({ request }: Route.ClientActionArgs) {
   const token = sessionStorage.getItem("token");
   if (formData.get("intent") === "create") {
     const newAdmin: AdminResponse = await (
-      await fetch(`${import.meta.env.VITE_API_URL}/admins/`, {
+      await fetch(`${import.meta.env.VITE_BACKEND_API_URL}/admins/`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

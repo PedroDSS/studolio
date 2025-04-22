@@ -19,7 +19,7 @@ export async function clientLoader() {
   if (!token) {
     return redirect("/");
   }
-  const response = await fetch(`${import.meta.env.VITE_API_URL}/promotions/`, {
+  const response = await fetch(`${import.meta.env.VITE_BACKEND_API_URL}/promotions/`, {
     headers: {
       Authorization: `Bearer ${token}`,
     },
@@ -37,7 +37,7 @@ export async function clientAction({ request }: Route.ClientActionArgs) {
   const token = sessionStorage.getItem("token");
   if (formData.get("intent") === "create") {
     const newEtudiant: EtudiantResponse = await (
-      await fetch(`${import.meta.env.VITE_API_URL}/etudiants/`, {
+      await fetch(`${import.meta.env.VITE_BACKEND_API_URL}/etudiants/`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

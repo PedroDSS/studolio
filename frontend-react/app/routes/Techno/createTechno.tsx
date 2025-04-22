@@ -17,7 +17,7 @@ export async function clientAction({ request }: Route.ClientActionArgs) {
   let formData = await request.formData();
   const token = sessionStorage.getItem("token");
   if (formData.get("intent") === "create") {
-    const response = await fetch(`${import.meta.env.VITE_API_URL}/technos`, {
+    const response = await fetch(`${import.meta.env.VITE_BACKEND_API_URL}/technos`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

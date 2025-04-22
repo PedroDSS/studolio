@@ -12,7 +12,7 @@ export async function clientLoader({ params }: Route.ClientLoaderArgs) {
     return redirect("/");
   }
   const responseComment = await fetch(
-    `${import.meta.env.VITE_API_URL}/comments/${params.idComment}`,
+    `${import.meta.env.VITE_BACKEND_API_URL}/comments/${params.idComment}`,
     {
       headers: {
         Authorization: `Bearer ${token}`,
@@ -38,7 +38,7 @@ export async function clientAction({
   const token = sessionStorage.getItem("token");
   if (formData.get("intent") === "updateComment") {
     await fetch(
-      `${import.meta.env.VITE_API_URL}/comments/${params.idComment}`,
+      `${import.meta.env.VITE_BACKEND_API_URL}/comments/${params.idComment}`,
       {
         method: "PATCH",
         headers: {
@@ -54,7 +54,7 @@ export async function clientAction({
   }
   if (formData.get("intent") === "deleteComment") {
     await fetch(
-      `${import.meta.env.VITE_API_URL}/comments/${params.idComment}`,
+      `${import.meta.env.VITE_BACKEND_API_URL}/comments/${params.idComment}`,
       {
         method: "DELETE",
         headers: {

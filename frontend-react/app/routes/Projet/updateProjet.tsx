@@ -19,7 +19,7 @@ export async function clientLoader({ params }: Route.ClientLoaderArgs) {
   }
 
   const responseProjet = await fetch(
-    `${import.meta.env.VITE_API_URL}/projets/${params.id}`,
+    `${import.meta.env.VITE_BACKEND_API_URL}/projets/${params.id}`,
     {
       headers: {
         Authorization: `Bearer ${token}`,
@@ -32,7 +32,7 @@ export async function clientLoader({ params }: Route.ClientLoaderArgs) {
   }
 
   const responseCategories = await fetch(
-    `${import.meta.env.VITE_API_URL}/categories/`,
+    `${import.meta.env.VITE_BACKEND_API_URL}/categories/`,
     {
       headers: {
         Authorization: `Bearer ${token}`,
@@ -40,7 +40,7 @@ export async function clientLoader({ params }: Route.ClientLoaderArgs) {
     }
   );
   const responseTechnos = await fetch(
-    `${import.meta.env.VITE_API_URL}/technos/`,
+    `${import.meta.env.VITE_BACKEND_API_URL}/technos/`,
     {
       headers: {
         Authorization: `Bearer ${token}`,
@@ -48,7 +48,7 @@ export async function clientLoader({ params }: Route.ClientLoaderArgs) {
     }
   );
   const responseEtudiants = await fetch(
-    `${import.meta.env.VITE_API_URL}/etudiants/`,
+    `${import.meta.env.VITE_BACKEND_API_URL}/etudiants/`,
     {
       headers: {
         Authorization: `Bearer ${token}`,
@@ -73,7 +73,7 @@ export async function clientAction({ request }: Route.ClientActionArgs) {
     const etudiants = formData.getAll("etudiants");
 
     await fetch(
-      `${import.meta.env.VITE_API_URL}/projets/${formData.get("id")}`,
+      `${import.meta.env.VITE_BACKEND_API_URL}/projets/${formData.get("id")}`,
       {
         method: "PATCH",
         headers: {

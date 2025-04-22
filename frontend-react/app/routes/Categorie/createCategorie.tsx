@@ -18,7 +18,7 @@ export async function clientAction({ request }: Route.ClientActionArgs) {
   const token = sessionStorage.getItem("token");
   if (formData.get("intent") === "create") {
     const response = await fetch(
-      `${import.meta.env.VITE_API_URL}/categories/`,
+      `${import.meta.env.VITE_BACKEND_API_URL}/categories/`,
       {
         method: "POST",
         headers: {
