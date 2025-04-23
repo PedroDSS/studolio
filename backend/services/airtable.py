@@ -1,5 +1,5 @@
 import httpx
-from typing import Dict, Any, Optional
+from typing import Any, List, Dict, Optional
 from core.config import settings
 
 class AirtableService:
@@ -15,7 +15,11 @@ class AirtableService:
             Récupère tous les instances de la table Airtable.
         """
         async with httpx.AsyncClient() as client:
-            response = await client.get(self.base_url, headers=self.headers, params=params)
+            response = await client.get(
+                self.base_url,
+                headers=self.headers,
+                params=params
+            )
             if response.status_code == 200:
                 return response.json()
             else:
@@ -27,7 +31,10 @@ class AirtableService:
         """
         url = f"{self.base_url}/{record_id}"
         async with httpx.AsyncClient() as client:
-            response = await client.get(url, headers=self.headers)
+            response = await client.get(
+                url,
+                headers=self.headers
+            )
             if response.status_code == 200:
                 return response.json()
             else:
@@ -38,11 +45,33 @@ class AirtableService:
             Crée une nouvel instance dans Airtable.
         """
         async with httpx.AsyncClient() as client:
-            response = await client.post(self.base_url, headers=self.headers, json={"fields": data})
+            response = await client.post(
+                self.base_url,
+                headers=self.headers,
+                json={"fields": data}
+            )
             if response.status_code == 201:
                 return response.json()
             else:
                 raise Exception(f"Error creating record: {response.text}")
+            
+    async def batch_create(self, records: List[Dict[str, Any]]) -> Dict[str, Any]:
+        """
+            Crée plusieurs instances (Au maximum 10 qui est la limitation d'Airtable).
+        """
+        batch_datas = [
+            {"fields": record} for record in records
+        ]
+        async with httpx.AsyncClient() as client:
+            response = await client.post(
+                self.base_url,
+                headers=self.headers,
+                json={"records": batch_datas}
+            )
+            if response.status_code == 200:
+                return response.json()
+            else:
+                raise Exception(f"Error creating records: {response.text}")
 
     async def update(self, record_id: str, data: Dict[str, Any]) -> Dict[str, Any]:
         """
@@ -50,7 +79,11 @@ class AirtableService:
         """
         url = f"{self.base_url}/{record_id}"
         async with httpx.AsyncClient() as client:
-            response = await client.patch(url, headers=self.headers, json={"fields": data})
+            response = await client.patch(
+                url,
+                headers=self.headers,
+                json={"fields": data}
+            )
             if response.status_code == 200:
                 return response.json()
             else:
@@ -62,8 +95,29 @@ class AirtableService:
         """
         url = f"{self.base_url}/{record_id}"
         async with httpx.AsyncClient() as client:
-            response = await client.delete(url, headers=self.headers)
+            response = await client.delete(
+                url,
+                headers=self.headers
+            )
             if response.status_code == 200:
                 return None
             else:
                 raise Exception(f"Error deleting record: {response.text}")
+            
+    async def batch_delete(self, records: List[Dict[str, Any]]) -> Dict[str, Any]:
+        """
+            Supprime plusieurs instances (Au maximum 10 qui est la limitation d'Airtable).
+        """
+        batch_datas = [
+            {"id": record["id"]} for record in records
+        ]
+        async with httpx.AsyncClient() as client:
+            response = await client.delete(
+                self.base_url,
+                headers=self.headers,
+                json={"records": batch_datas}
+            )
+            if response.status_code == 200:
+                return response.json()
+            else:
+                raise Exception(f"Error creating records: {response.text}")
