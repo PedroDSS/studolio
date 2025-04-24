@@ -3,13 +3,13 @@ import { Outlet } from "react-router";
 import { Header } from "~/components";
 
 const navLinks = [
-  { link: "/dashboard", label: "Dashboard" },
-  { link: "/admins", label: "Administrateurs" },
-  { link: "/technos", label: "Technos" },
-  { link: "/categories", label: "Catégories" },
-  { link: "/promotions", label: "Promotions" },
-  { link: "/etudiants", label: "Étudiants" },
-  { link: "/projets", label: "Projets" },
+  { link: "/admin/dashboard", label: "Dashboard" },
+  { link: "/admin/admins", label: "Administrateurs" },
+  { link: "/admin/technos", label: "Technos" },
+  { link: "/admin/categories", label: "Catégories" },
+  { link: "/admin/promotions", label: "Promotions" },
+  { link: "/admin/etudiants", label: "Étudiants" },
+  { link: "/admin/projets", label: "Projets" },
 ];
 export default function LayoutDashboard(): JSX.Element {
   return (

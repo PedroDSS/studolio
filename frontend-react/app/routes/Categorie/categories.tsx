@@ -41,7 +41,7 @@ export default function Categories({ loaderData }: Route.ComponentProps) {
       <Button
         className="mt-4 mb-8"
         aria-label="Ajouter une techno"
-        onClick={() => (window.location.href = "/categories/create")}
+        onClick={() => (window.location.href = "/admin/categories/create")}
       >
         Ajouter une catégorie
       </Button>
@@ -69,7 +69,7 @@ export default function Categories({ loaderData }: Route.ComponentProps) {
             </CardHeader>
             <CardFooter className="flex justify-between items-center w-full space-x-4 mt-6">
               <Link
-                to={`/categories/update/${record.id}`}
+                to={`/admin/categories/update/${record.id}`}
                 className="p-3 bg-yellow-400 text-white rounded hover:bg-yellow-500"
               >
                 <Pencil height={20} width={20} />

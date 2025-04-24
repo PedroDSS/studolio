@@ -41,7 +41,7 @@ export default function Admins({ loaderData }: Route.ComponentProps) {
       <Button
         className="mt-4 mb-8"
         aria-label="Ajouter un administrateur"
-        onClick={() => (window.location.href = "/admins/create")}
+        onClick={() => (window.location.href = "/admin/admins/create")}
       >
         Ajouter un administrateur
       </Button>
@@ -67,13 +67,13 @@ export default function Admins({ loaderData }: Route.ComponentProps) {
             </CardHeader>
             <CardFooter className="flex justify-between items-center w-full space-x-4 mt-6">
               <Link
-                to={`/admins/${record.id}`}
+                to={`/admin/admins/${record.id}`}
                 className="p-3 rounded bg-green-600 hover:bg-green-700 text-white"
               >
                 <OpenEye height={20} width={20} />
               </Link>
               <Link
-                to={`/admins/update/${record.id}`}
+                to={`/admin/admins/update/${record.id}`}
                 className="p-3 bg-yellow-400 text-white rounded hover:bg-yellow-500"
               >
                 <Pencil height={20} width={20} />

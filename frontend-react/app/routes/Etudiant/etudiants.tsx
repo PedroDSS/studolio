@@ -41,7 +41,7 @@ export default function Etudiants({ loaderData }: Route.ComponentProps) {
       <Button
         className="mt-4 mb-8"
         aria-label="Ajouter un(e) étudiant(e)"
-        onClick={() => (window.location.href = "/etudiants/create")}
+        onClick={() => (window.location.href = "/admin/etudiants/create")}
       >
         Ajouter un(e) étudiant(e)
       </Button>
@@ -67,13 +67,13 @@ export default function Etudiants({ loaderData }: Route.ComponentProps) {
             </CardHeader>
             <CardFooter className="flex justify-between items-center w-full space-x-4 mt-6">
               <Link
-                to={`/etudiants/${record.id}`}
+                to={`/admin/etudiants/${record.id}`}
                 className="p-3 rounded bg-green-600 hover:bg-green-700 text-white"
               >
                 <OpenEye height={20} width={20} />
               </Link>
               <Link
-                to={`/etudiants/update/${record.id}`}
+                to={`/admin/etudiants/update/${record.id}`}
                 className="p-3 bg-yellow-400 text-white rounded hover:bg-yellow-500"
               >
                 <Pencil height={20} width={20} />

@@ -72,7 +72,7 @@ export async function clientAction({ request }: Route.ClientActionArgs) {
         }),
       }
     );
-    return redirect(`/etudiants/${formData.get("id")}`);
+    return redirect(`/admin/etudiants/${formData.get("id")}`);
   }
 }
 
@@ -85,7 +85,7 @@ export default function UpdatePromotion({ loaderData }: Route.ComponentProps) {
       <Button
         variant="outline"
         className="self-start mb-4"
-        onClick={() => (window.location.href = "/etudiants")}
+        onClick={() => (window.location.href = "/admin/etudiants")}
       >
         Retour à la liste
       </Button>

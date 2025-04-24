@@ -41,7 +41,7 @@ export default function Projets({ loaderData }: Route.ComponentProps) {
       <Button
         className="mt-4 mb-8"
         aria-label="Ajouter une techno"
-        onClick={() => (window.location.href = "/projets/create")}
+        onClick={() => (window.location.href = "/admin/projets/create")}
       >
         Ajouter un projet
       </Button>
@@ -77,13 +77,13 @@ export default function Projets({ loaderData }: Route.ComponentProps) {
             </div>
             <CardFooter className="flex justify-between items-center w-full space-x-4 mt-6">
               <Link
-                to={`/projets/${record.id}`}
+                to={`/admin/projets/${record.id}`}
                 className="p-3 rounded bg-green-600 hover:bg-green-700 text-white"
               >
                 <OpenEye height={20} width={20} />
               </Link>
               <Link
-                to={`/projets/update/${record.id}`}
+                to={`/admin/projets/update/${record.id}`}
                 className="p-3 bg-yellow-400 text-white rounded hover:bg-yellow-500"
               >
                 <Pencil height={20} width={20} />

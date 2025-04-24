@@ -1,14 +1,4 @@
 services:
-  # backend:
-  #   build: ./backend
-  #   ports:
-  #     - "3000:3000"
-  #   volumes:
-  #     - ./backend:/app
-  #     - /app/node_modules
-  #   env_file:
-  #     - .env
-
   backend:
     build: ./backend
     container_name: backend
@@ -18,16 +8,6 @@ services:
       - ./backend:/app
     env_file:
       - .env
-
-  # frontend-nuxt:
-  #   build: ./frontend-nuxt
-  #   ports:
-  #     - "3001:3001"
-  #   volumes:
-  #     - ./frontend-nuxt:/app
-  #     - /app/node_modules
-  #   env_file:
-  #     - .env
 
   frontend-react:
     build: ./frontend-react
@@ -41,6 +21,5 @@ services:
       - .env
 
 volumes:
-  backend: # frontend-nuxt:
-
+  backend:
   frontend-react:

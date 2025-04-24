@@ -16,7 +16,7 @@ export default function Admin({ loaderData }: Route.ComponentProps) {
       <Button
         variant="outline"
         className="mb-4 self-start"
-        onClick={() => (window.location.href = "/admins")}
+        onClick={() => (window.location.href = "/admin/admins")}
       >
         Retour à la liste
       </Button>
@@ -45,14 +45,14 @@ export default function Admin({ loaderData }: Route.ComponentProps) {
 
         <div className="mt-6 flex gap-4">
           <Link
-            to={`/admins/update/${admin.id}`}
+            to={`/admin/admins/update/${admin.id}`}
             className="flex items-center gap-2 px-4 py-2 bg-yellow-400 text-white rounded hover:bg-yellow-500"
           >
             <Pencil height={16} width={16} />
             Modifier
           </Link>
           <Link
-            to={`/admins/update/password/${admin.id}`}
+            to={`/admin/admins/update/password/${admin.id}`}
             className="flex items-center gap-2 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
           >
             <Pencil height={16} width={16} />

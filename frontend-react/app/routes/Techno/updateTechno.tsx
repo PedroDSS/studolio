@@ -50,7 +50,7 @@ export async function clientAction({ request }: Route.ClientActionArgs) {
       const errorData = await response.json();
       throw new Error(errorData.detail || "Une erreur est survenue.");
     }
-    return redirect(`/technos/`);
+    return redirect(`/admin/technos/`);
   }
 }
 
@@ -64,7 +64,7 @@ export default function UpdateTechno({ loaderData }: Route.ComponentProps) {
       <Button
         variant="outline"
         className="self-start mb-4"
-        onClick={() => (window.location.href = "/technos")}
+        onClick={() => (window.location.href = "/admin/technos")}
       >
         Retour à la liste
       </Button>

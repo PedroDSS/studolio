@@ -8,7 +8,7 @@ import { Button } from "~/components/ui/button";
 export async function clientLoader() {
   const token = sessionStorage.getItem("token");
   if (token) {
-    return redirect("/dashboard");
+    return redirect("/admin/dashboard");
   }
   return;
 }
@@ -16,8 +16,6 @@ export async function clientLoader() {
 export async function clientAction({ request }: Route.ClientActionArgs) {
   let formData = await request.formData();
   if (formData.get("intent") === "login") {
-    console.log("MON IMPORT DE LURL ?????");
-    console.log(import.meta.env.VITE_BACKEND_API_URL);
     const response = await fetch(`${import.meta.env.VITE_BACKEND_API_URL}/login/`, {
       method: "POST",
       headers: {
@@ -35,7 +33,7 @@ export async function clientAction({ request }: Route.ClientActionArgs) {
     const tokenResponse = await response.json();
     sessionStorage.setItem("token", tokenResponse.token);
 
-    return redirect("/dashboard");
+    return redirect("/admin/dashboard");
   }
 }
 

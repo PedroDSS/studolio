@@ -50,7 +50,7 @@ export async function clientAction({ request }: Route.ClientActionArgs) {
       const errorData = await response.json();
       throw new Error(errorData.detail || "Une erreur est survenue.");
     }
-    return redirect(`/categories`);
+    return redirect(`/admin/categories`);
   }
 }
 

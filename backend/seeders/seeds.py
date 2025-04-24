@@ -1,10 +1,10 @@
 import asyncio
-from seeders.seed_technos import seed_technos
-from seeders.seed_promotions import seed_promotions
-from seeders.seed_categories import seed_categories
-from seeders.seed_etudiants import seed_etudiants
-from seeders.seed_admins import seed_admins
-from seeders.seed_projets import seed_projets
+from .seed_technos import seed_technos
+from .seed_promotions import seed_promotions
+from .seed_categories import seed_categories
+from .seed_etudiants import seed_etudiants
+from .seed_admins import seed_admins
+from .seed_projets import seed_projets
 
 async def seed_all():
     await seed_technos()
@@ -16,3 +16,5 @@ async def seed_all():
 
 if __name__ == "__main__":
     asyncio.run(seed_all())
+
+# docker exec -it backend python3 -m seeders.seeds

@@ -17,7 +17,7 @@ export default function Projet({ loaderData }: Route.ComponentProps) {
       <Button
         variant="outline"
         className="mb-4 self-start"
-        onClick={() => (window.location.href = "/projets")}
+        onClick={() => (window.location.href = "/admin/projets")}
       >
         Retour à la liste
       </Button>
@@ -69,7 +69,7 @@ export default function Projet({ loaderData }: Route.ComponentProps) {
           </div>
           <div className="mt-6 flex gap-4">
             <Link
-              to={`/projets/update/${projet.id}`}
+              to={`/admin/projets/update/${projet.id}`}
               className="flex items-center gap-2 px-4 py-2 bg-yellow-400 text-white rounded hover:bg-yellow-500"
             >
               <Pencil height={16} width={16} />
@@ -97,7 +97,7 @@ export default function Projet({ loaderData }: Route.ComponentProps) {
                     </p>
                   </div>
                   <Link
-                    to={`/etudiants/${etudiant.id}`}
+                    to={`/admin/etudiants/${etudiant.id}`}
                     className="p-3 rounded bg-green-600 hover:bg-green-700 text-white"
                   >
                     <OpenEye height={20} width={20} />
@@ -117,7 +117,7 @@ export default function Projet({ loaderData }: Route.ComponentProps) {
       <Button
         variant="outline"
         className="mb-4 self-start"
-        onClick={() => (window.location.href = `/projets/comment/${projet.id}`)}
+        onClick={() => (window.location.href = `/admin/projets/comment/${projet.id}`)}
       >
         Ajouter un commentaire
       </Button>
@@ -141,7 +141,7 @@ export default function Projet({ loaderData }: Route.ComponentProps) {
                   variant="outline"
                   className="bg-yellow-400 text-white rounded hover:bg-yellow-500"
                   onClick={() =>
-                    (window.location.href = `/projets/comment/edit/${projet.id}/${commentaire.id}`)
+                    (window.location.href = `/admin/projets/comment/edit/${projet.id}/${commentaire.id}`)
                   }
                 >
                   <Pencil height={16} width={16} />

@@ -42,7 +42,7 @@ export default function Technos({ loaderData }: Route.ComponentProps) {
       <Button
         className="mt-4 mb-8"
         aria-label="Ajouter une techno"
-        onClick={() => (window.location.href = "/technos/create")}
+        onClick={() => (window.location.href = "/admin/technos/create")}
       >
         Ajouter une technologie
       </Button>
@@ -72,7 +72,7 @@ export default function Technos({ loaderData }: Route.ComponentProps) {
             </CardHeader>
             <CardFooter className="flex justify-between items-center w-full space-x-4 mt-6">
               <Link
-                to={`/technos/update/${record.id}`}
+                to={`/admin/technos/update/${record.id}`}
                 className="p-3 bg-yellow-400 text-white rounded hover:bg-yellow-500"
               >
                 <Pencil height={20} width={20} />

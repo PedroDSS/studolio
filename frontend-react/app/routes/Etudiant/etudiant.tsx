@@ -23,7 +23,7 @@ export default function Etudiant({ loaderData }: Route.ComponentProps) {
       <Button
         variant="outline"
         className="mb-4 self-start"
-        onClick={() => (window.location.href = "/etudiants")}
+        onClick={() => (window.location.href = "/admin/etudiants")}
       >
         Retour à la liste
       </Button>
@@ -55,7 +55,7 @@ export default function Etudiant({ loaderData }: Route.ComponentProps) {
 
         <div className="mt-6 flex gap-4">
           <Link
-            to={`/etudiants/update/${etudiant.id}`}
+            to={`/admin/etudiants/update/${etudiant.id}`}
             className="flex items-center gap-2 px-4 py-2 bg-yellow-400 text-white rounded hover:bg-yellow-500"
           >
             <Pencil height={16} width={16} />
@@ -90,7 +90,7 @@ export default function Etudiant({ loaderData }: Route.ComponentProps) {
               </div>
               <CardFooter className="flex justify-between items-center w-full space-x-4 mt-6">
                 <Link
-                  to={`/projets/${projet.id}`}
+                  to={`/admin/projets/${projet.id}`}
                   className="p-3 rounded bg-green-600 hover:bg-green-700 text-white"
                 >
                   <OpenEye height={20} width={20} />

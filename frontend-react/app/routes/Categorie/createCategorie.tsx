@@ -35,7 +35,7 @@ export async function clientAction({ request }: Route.ClientActionArgs) {
       const errorData = await response.json();
       throw new Error(errorData.detail || "Une erreur est survenue.");
     }
-    return redirect(`/categories/`);
+    return redirect(`/admin/categories/`);
   }
 }
 
@@ -47,7 +47,7 @@ export default function CreateCategorie() {
       <Button
         variant="outline"
         className="self-start mb-4"
-        onClick={() => (window.location.href = "/categories")}
+        onClick={() => (window.location.href = "/admin/categories")}
       >
         Retour à la liste
       </Button>

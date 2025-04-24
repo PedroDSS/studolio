@@ -50,7 +50,7 @@ export async function clientAction({ request }: Route.ClientActionArgs) {
       const errorData = await response.json();
       throw new Error(errorData.detail || "Une erreur est survenue.");
     }
-    return redirect(`/promotions/`);
+    return redirect(`/admin/promotions/`);
   }
 }
 
@@ -63,7 +63,7 @@ export default function UpdatePromotion({ loaderData }: Route.ComponentProps) {
       <Button
         variant="outline"
         className="self-start mb-4"
-        onClick={() => (window.location.href = "/promotions")}
+        onClick={() => (window.location.href = "/admin/promotions")}
       >
         Retour à la liste
       </Button>

@@ -108,14 +108,13 @@ class AirtableService:
         """
             Supprime plusieurs instances (Au maximum 10 qui est la limitation d'Airtable).
         """
-        batch_datas = [
-            {"id": record["id"]} for record in records
-        ]
+        record_ids = [record["id"] for record in records]
+        params = [("records[]", rid) for rid in record_ids]
         async with httpx.AsyncClient() as client:
             response = await client.delete(
                 self.base_url,
                 headers=self.headers,
-                json={"records": batch_datas}
+                params=params
             )
             if response.status_code == 200:
                 return response.json()

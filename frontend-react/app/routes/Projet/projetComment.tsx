@@ -49,7 +49,7 @@ export async function clientAction({
       }),
     });
 
-    return redirect(`/projets/${params.id}`);
+    return redirect(`/admin/projets/${params.id}`);
   }
 }
 
@@ -62,7 +62,7 @@ export default function ProjetComment({ loaderData }: Route.ComponentProps) {
       <Button
         variant="outline"
         className="self-start mb-4"
-        onClick={() => (window.location.href = `/projets/${projet.id}`)}
+        onClick={() => (window.location.href = `/admin/projets/${projet.id}`)}
       >
         Retour au projet {projet.fields.Nom}
       </Button>

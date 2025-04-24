@@ -52,7 +52,7 @@ export async function clientAction({ request }: Route.ClientActionArgs) {
       throw new Error(errorData.detail || "Une erreur est survenue.");
     }
 
-    return redirect(`/admins/${formData.get("id")}`);
+    return redirect(`/admin/admins/${formData.get("id")}`);
   }
 }
 

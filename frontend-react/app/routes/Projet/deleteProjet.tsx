@@ -21,7 +21,7 @@ export async function clientAction({ request }: Route.ClientActionArgs) {
       const errorData = await response.json();
       throw new Error(errorData.detail || "Une erreur est survenue.");
     }
-    return redirect("/projets");
+    return redirect("/admin/projets");
   }
 }
 

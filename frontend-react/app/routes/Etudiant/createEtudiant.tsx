@@ -51,7 +51,7 @@ export async function clientAction({ request }: Route.ClientActionArgs) {
         }),
       })
     ).json();
-    return redirect(`/etudiants/${newEtudiant.id}`);
+    return redirect(`/admin/etudiants/${newEtudiant.id}`);
   }
 }
 
@@ -65,7 +65,7 @@ export default function CreateEtudiant({ loaderData }: Route.ComponentProps) {
       <Button
         variant="outline"
         className="self-start mb-4"
-        onClick={() => (window.location.href = "/etudiants")}
+        onClick={() => (window.location.href = "/admin/etudiants")}
       >
         Retour à la liste
       </Button>

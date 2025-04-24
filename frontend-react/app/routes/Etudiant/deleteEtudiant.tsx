@@ -21,7 +21,7 @@ export async function clientAction({ request }: Route.ClientActionArgs) {
       throw new Error(errorData.detail || "Une erreur est survenue.");
     }
 
-    return redirect("/etudiants");
+    return redirect("/admin/etudiants");
   }
 }
 export default function DeleteEtudiant({ id }: { id: string }) {

@@ -50,7 +50,7 @@ export async function clientAction({
         }),
       }
     );
-    return redirect(`/projets/${params.idProjet}`);
+    return redirect(`/admin/projets/${params.idProjet}`);
   }
   if (formData.get("intent") === "deleteComment") {
     await fetch(
@@ -62,7 +62,7 @@ export async function clientAction({
         },
       }
     );
-    return redirect(`/projets/${params.idProjet}`);
+    return redirect(`/admin/projets/${params.idProjet}`);
   }
 }
 
@@ -77,7 +77,7 @@ export default function ProjetCommentEdit({
       <Button
         variant="outline"
         className="self-start mb-4"
-        onClick={() => (window.location.href = `/projets/${projetID}`)}
+        onClick={() => (window.location.href = `/admin/projets/${projetID}`)}
       >
         Retour au projet
       </Button>

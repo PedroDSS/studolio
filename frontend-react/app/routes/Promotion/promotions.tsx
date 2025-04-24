@@ -41,7 +41,7 @@ export default function Promotions({ loaderData }: Route.ComponentProps) {
       <Button
         className="mt-4 mb-8"
         aria-label="Ajouter une promotion"
-        onClick={() => (window.location.href = "/promotions/create")}
+        onClick={() => (window.location.href = "/admin/promotions/create")}
       >
         Ajouter une promotion
       </Button>
@@ -71,7 +71,7 @@ export default function Promotions({ loaderData }: Route.ComponentProps) {
             </CardHeader>
             <CardFooter className="flex justify-between items-center w-full space-x-4 mt-6">
               <Link
-                to={`/promotions/update/${record.id}`}
+                to={`/admin/promotions/update/${record.id}`}
                 className="p-3 bg-yellow-400 text-white rounded hover:bg-yellow-500"
               >
                 <Pencil height={20} width={20} />
