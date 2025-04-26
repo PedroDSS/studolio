@@ -25,6 +25,11 @@ export const links: Route.LinksFunction = () => [
     rel: "stylesheet",
     href: "https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap",
   },
+  {
+    rel: "icon",
+    href: "/studolio.svg",
+    type: "image/x-icon",
+  },
 ];
 
 export function Layout({ children }: { children: React.ReactNode }) {
@@ -48,6 +53,13 @@ export function Layout({ children }: { children: React.ReactNode }) {
 export default function App() {
   return <Outlet />;
 }
+
+export const meta: Route.MetaFunction = () => {
+  return [
+    { title: "Studolio - Plateforme de Projets" },
+    { name: "description", content: "Découvrez les meilleurs projets étudiants sur Studolio." },
+  ];
+};
 
 export function ErrorBoundary({ error }: Route.ErrorBoundaryProps) {
   const navigate = useNavigate();

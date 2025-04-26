@@ -52,7 +52,9 @@ export interface ProjetResponse {
     Publié: string;
     Catégorie: string[];
     Technos: string[];
+    TechnosNames: string[];
     Étudiants: string[];
+    ÉtudiantsNames: string[];
     Commentaire: string[] | null;
   };
 }
