@@ -77,7 +77,7 @@ docker compose build || docker compose up --build -d
 
 ### Configuration
 ```bash
-# Remplir un .env en se basant sur le .env.local
+# Créer et remplir le fichier ".env" en se basant sur le fichier .env.local
 ```
 
 ### Lancer le projet
