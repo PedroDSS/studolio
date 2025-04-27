@@ -10,10 +10,11 @@ class ProjetFields(BaseModel):
     Publié: Optional[bool] = None
     Catégorie: List[str]
     Technos: List[str]
-    TechnosNames : List[str]
+    TechnosNames: List[str]
     Étudiants: List[str]
     ÉtudiantsNames: List[str]
     Commentaire: Optional[List[str]] = None
+    Visuel: Optional[List[dict]] = None 
 
 class Projet(BaseModel):
     id: str

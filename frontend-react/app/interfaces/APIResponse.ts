@@ -56,8 +56,30 @@ export interface ProjetResponse {
     Étudiants: string[];
     ÉtudiantsNames: string[];
     Commentaire: string[] | null;
+    Visuel: Array<{
+      id: string;
+      width: number;
+      height: number;
+      url: string;
+      filename: string;
+      size: number;
+      type: string;
+      thumbnails: {
+        small: {
+          url: string;
+          width: number;
+          height: number;
+        };
+        large: {
+          url: string;
+          width: number;
+          height: number;
+        };
+      };
+    }> | null;
   };
 }
+
 
 export interface CommentResponse {
   id: string;

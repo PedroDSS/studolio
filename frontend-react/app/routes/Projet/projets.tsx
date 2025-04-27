@@ -198,7 +198,15 @@ export default function Projets() {
                     </CardDescription>
                   )}
                 </CardHeader>
-
+                {p.fields.Visuel && p.fields.Visuel.length > 0 && (
+                  <div className="flex justify-center mb-2">
+                    <img
+                      src={p.fields.Visuel[0].url}
+                      alt={p.fields.Visuel[0].filename}
+                      className="rounded-lg h-auto max-w-[200px]"
+                    />
+                  </div>
+                )}
                 {p.fields.TechnosNames?.length > 0 && (
                   <div className="mt-4">
                     <span className="block text-xs font-semibold text-gray-700 mb-1 text-center">

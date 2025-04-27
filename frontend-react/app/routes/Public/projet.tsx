@@ -14,6 +14,11 @@ type Projet = {
         Mots?: string;
         TechnosNames?: string[];
         ÉtudiantsNames?: string[];
+        Visuel?: Array<{
+            id: string;
+            url: string;
+            filename: string;
+        }> | null;
     };
 };
 
@@ -139,6 +144,16 @@ export default function Projet() {
             </div>
 
             <div className="bg-white shadow-md rounded-lg p-6 border border-gray-200 max-w-4xl mx-auto space-y-6">
+                {projet.fields.Visuel && projet.fields.Visuel.length > 0 && (
+                    <div className="flex justify-center mb-6">
+                        <img
+                            src={projet.fields.Visuel[0].url}
+                            alt={projet.fields.Visuel[0].filename}
+                            className="rounded-lg h-auto max-w-[300px]"
+                        />
+                    </div>
+                )}
+
                 <div className="space-y-2">
                     <h1 className="text-3xl font-bold text-gray-800">{projet.fields.Nom}</h1>
                     <p className="text-gray-700">

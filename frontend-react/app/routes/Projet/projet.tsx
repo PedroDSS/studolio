@@ -26,6 +26,16 @@ export default function Projet({ loaderData }: Route.ComponentProps) {
 
       <div className="bg-white shadow-lg rounded-lg p-6 mb-6 border border-gray-200 w-3xl flex justify-between">
         <div>
+          {projet.fields.Visuel && projet.fields.Visuel.length > 0 && (
+            <div className="flex justify-center mb-6">
+              <img
+                src={projet.fields.Visuel[0].url}
+                alt={projet.fields.Visuel[0].filename}
+                className="rounded-lg h-auto max-w-[300px]"
+              />
+            </div>
+          )}
+
           <h1 className="text-3xl font-bold text-gray-800 mb-2">
             {projet.fields.Nom}
           </h1>

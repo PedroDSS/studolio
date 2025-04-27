@@ -147,6 +147,16 @@ export default function Projets() {
                                         </CardDescription>
                                     )}
                                 </CardHeader>
+                                {projet.fields.Visuel && projet.fields.Visuel.length > 0 && (
+                                    <div className="mt-4">
+                                        <img
+                                            src={projet.fields.Visuel[0].url}
+                                            alt={projet.fields.Nom}
+                                            className="w-full h-auto rounded-lg shadow-md"
+                                        />
+                                    </div>
+                                )}
+
                                 <div className="flex flex-col gap-3 mt-4 flex-1 text-sm">
                                     {projet.fields.TechnosNames && projet.fields.TechnosNames.length > 0 && (
                                         <div className="flex flex-col">
@@ -196,7 +206,6 @@ export default function Projets() {
                     )}
                 </div>
             </div>
-
 
             <div className="flex justify-center items-center space-x-4 mt-10">
                 <Button
