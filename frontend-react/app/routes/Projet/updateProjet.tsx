@@ -5,12 +5,13 @@ import type {
   EtudiantResponse,
   TechnoResponse,
 } from "~/interfaces/APIResponse";
-import { Fragment } from "react";
+import { Fragment, useState } from "react";
 import { Button } from "~/components/ui/button";
 import { Label } from "~/components/ui/label";
 import { Input } from "~/components/ui/input";
 import { Textarea } from "~/components/ui/textarea";
 import { Spinner } from "~/components";
+import Select from "react-select"; // Assurez-vous d'importer react-select
 
 export async function clientLoader({ params }: Route.ClientLoaderArgs) {
   const token = sessionStorage.getItem("token");
@@ -101,6 +102,49 @@ export default function UpdateProjet({ loaderData }: Route.ComponentProps) {
   let busy = updateFetcher.state !== "idle";
   const navigate = useNavigate();
   const { projet, categories, technos, etudiants } = loaderData;
+
+  const [errors, setErrors] = useState<{ [key: string]: string }>({});
+
+  const handleSubmit = (event: React.FormEvent) => {
+    event.preventDefault();
+
+    const formData = new FormData(event.target as HTMLFormElement);
+    const nom = formData.get("nom");
+    const description = formData.get("description");
+    const mots = formData.get("mots");
+    const github = formData.get("github");
+    const technos = formData.getAll("technos");
+    const etudiants = formData.getAll("etudiants");
+    const categorie = formData.get("categorie");
+
+    const newErrors: { [key: string]: string } = {};
+
+    if (!nom) newErrors.nom = "Le nom du projet est obligatoire.";
+    if (!description) newErrors.description = "La description est obligatoire.";
+    if (!mots) newErrors.mots = "Le mot-clé est obligatoire.";
+    if (!github) newErrors.github = "Le lien GitHub est obligatoire.";
+    if (technos.length === 0) newErrors.technos = "Vous devez sélectionner au moins une technologie.";
+    if (etudiants.length === 0) newErrors.etudiants = "Vous devez sélectionner au moins un étudiant.";
+    if (!categorie) newErrors.categorie = "La catégorie du projet est obligatoire.";
+
+    if (Object.keys(newErrors).length > 0) {
+      setErrors(newErrors);
+      return;
+    }
+
+    updateFetcher.submit(event.target);
+  };
+
+  const technoOptions = technos.records.map((techno: TechnoResponse) => ({
+    value: techno.id,
+    label: techno.fields.Nom,
+  }));
+
+  const etudiantOptions = etudiants.records.map((etudiant: EtudiantResponse) => ({
+    value: etudiant.id,
+    label: etudiant.fields.Name,
+  }));
+
   return (
     <Fragment>
       <Button
@@ -115,14 +159,14 @@ export default function UpdateProjet({ loaderData }: Route.ComponentProps) {
       </h1>
       <updateFetcher.Form
         method="post"
+        onSubmit={handleSubmit}
         className="flex flex-col gap-6 w-full max-w-lg mx-auto"
       >
         <input type="hidden" name="intent" value="update" />
         <input type="hidden" name="id" value={projet.id} />
+
         <div className="flex flex-col gap-2">
-          <Label htmlFor="nom" className="text-sm font-medium text-gray-700">
-            Nom du projet
-          </Label>
+          <Label htmlFor="nom">Nom du projet</Label>
           <Input
             id="nom"
             name="nom"
@@ -130,25 +174,22 @@ export default function UpdateProjet({ loaderData }: Route.ComponentProps) {
             defaultValue={projet.fields.Nom}
             className="border-gray-300 focus:ring-green-500 focus:border-green-500"
           />
+          {errors.nom && <p className="text-red-600 text-sm">{errors.nom}</p>}
         </div>
+
         <div className="flex flex-col gap-2">
-          <Label
-            htmlFor="description"
-            className="text-sm font-medium text-gray-700"
-          >
-            Description du projet
-          </Label>
+          <Label htmlFor="description">Description du projet</Label>
           <Textarea
             id="description"
             name="description"
             defaultValue={projet.fields.Description}
             className="border-gray-300 focus:ring-green-500 focus:border-green-500"
           />
+          {errors.description && <p className="text-red-600 text-sm">{errors.description}</p>}
         </div>
+
         <div className="flex flex-col gap-2">
-          <Label htmlFor="mots" className="text-sm font-medium text-gray-700">
-            Mot-clé du projet
-          </Label>
+          <Label htmlFor="mots">Mot-clé du projet</Label>
           <Input
             id="mots"
             name="mots"
@@ -156,11 +197,11 @@ export default function UpdateProjet({ loaderData }: Route.ComponentProps) {
             defaultValue={projet.fields.Mots}
             className="border-gray-300 focus:ring-green-500 focus:border-green-500"
           />
+          {errors.mots && <p className="text-red-600 text-sm">{errors.mots}</p>}
         </div>
+
         <div className="flex flex-col gap-2">
-          <Label htmlFor="github" className="text-sm font-medium text-gray-700">
-            Lien GitHub du projet
-          </Label>
+          <Label htmlFor="github">Lien GitHub du projet</Label>
           <Input
             id="github"
             name="github"
@@ -168,80 +209,64 @@ export default function UpdateProjet({ loaderData }: Route.ComponentProps) {
             defaultValue={projet.fields.GitHub}
             className="border-gray-300 focus:ring-green-500 focus:border-green-500"
           />
+          {errors.github && <p className="text-red-600 text-sm">{errors.github}</p>}
         </div>
+
         <div className="flex flex-col gap-2">
           <Label htmlFor="published">Publié</Label>
-          <input type="checkbox" id="published" name="published" />
+          <input type="checkbox" id="published" name="published" defaultChecked={projet.fields.Publié} />
         </div>
+
         <div className="flex flex-col gap-2">
-          <Label
-            htmlFor="categorie"
-            className="text-sm font-medium text-gray-700"
-          >
-            Catégorie du projet
-          </Label>
-          <select
+          <Label htmlFor="categorie">Catégorie du projet</Label>
+          <Select
             id="categorie"
             name="categorie"
-            defaultValue={projet.fields.Catégorie[0]}
-            className="border border-gray-300 rounded p-2 focus:ring-green-500 focus:border-green-500"
-          >
-            {categories.records.map((categorie: CategoryResponse) => (
-              <option key={categorie.id} value={categorie.id}>
-                {categorie.fields.Nom}
-              </option>
-            ))}
-          </select>
+            options={categories.records.map((categorie: CategoryResponse) => ({
+              value: categorie.id,
+              label: categorie.fields.Nom,
+            }))}
+            defaultValue={{
+              value: projet.fields.Catégorie[0],
+              label: categories.records.find((c: CategoryResponse) => c.id === projet.fields.Catégorie[0])?.fields.Nom,
+            }}
+            className="react-select-container"
+          />
+          {errors.categorie && <p className="text-red-600 text-sm">{errors.categorie}</p>}
         </div>
+
         <div className="flex flex-col gap-2">
-          <Label
-            htmlFor="etudiants"
-            className="text-sm font-medium text-gray-700"
-          >
-            Étudiants associés
-          </Label>
-          <select
+          <Label htmlFor="etudiants">Étudiants associés</Label>
+          <Select
             id="etudiants"
             name="etudiants"
-            multiple
-            defaultValue={projet.fields.Étudiants}
-            className="border border-gray-300 rounded p-2 focus:ring-green-500 focus:border-green-500"
-          >
-            {etudiants.records.map((etudiant: EtudiantResponse) => (
-              <option key={etudiant.id} value={etudiant.id}>
-                {etudiant.fields.Name}
-              </option>
-            ))}
-          </select>
+            isMulti
+            options={etudiantOptions}
+            defaultValue={etudiantOptions.filter(option => projet.fields.Étudiants.includes(option.value))}
+            className="react-select-container"
+            classNamePrefix="react-select"
+          />
+          {errors.etudiants && <p className="text-red-600 text-sm">{errors.etudiants}</p>}
         </div>
+
         <div className="flex flex-col gap-2">
-          <Label
-            htmlFor="technos"
-            className="text-sm font-medium text-gray-700"
-          >
-            Technologies utilisées
-          </Label>
-          <select
+          <Label htmlFor="technos">Technologies utilisées</Label>
+          <Select
             id="technos"
             name="technos"
-            multiple
-            defaultValue={projet.fields.Technos}
-            className="border border-gray-300 rounded p-2 focus:ring-green-500 focus:border-green-500"
-          >
-            {technos.records.map((techno: TechnoResponse) => (
-              <option key={techno.id} value={techno.id}>
-                {techno.fields.Nom}
-              </option>
-            ))}
-          </select>
+            isMulti
+            options={technoOptions}
+            defaultValue={technoOptions.filter(option => projet.fields.Technos.includes(option.value))}
+            className="react-select-container"
+            classNamePrefix="react-select"
+          />
+          {errors.technos && <p className="text-red-600 text-sm">{errors.technos}</p>}
         </div>
+
         {busy ? (
           <Spinner />
         ) : (
-          <Button
-            type="submit"
-            className="bg-green-600 hover:bg-green-700 text-white"
-          >
+          <Button type="submit" className="bg-green-600 hover:bg-green-700 text-white">
             Modifier le projet
           </Button>
         )}

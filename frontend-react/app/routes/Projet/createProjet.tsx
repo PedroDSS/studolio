@@ -11,8 +11,9 @@ import { Label } from "~/components/ui/label";
 import { Input } from "~/components/ui/input";
 import { Textarea } from "~/components/ui/textarea";
 import { Spinner } from "~/components";
+import Select from "react-select";
 import {
-  Select,
+  Select as UISelect,
   SelectContent,
   SelectItem,
   SelectTrigger,
@@ -112,6 +113,16 @@ export default function CreateProjet({ loaderData }: Route.ComponentProps) {
     fetcher.submit(event.target);
   };
 
+  const technoOptions = technos.records.map((t: TechnoResponse) => ({
+    value: t.id,
+    label: t.fields.Nom,
+  }));
+
+  const etudiantOptions = etudiants.records.map((e: EtudiantResponse) => ({
+    value: e.id,
+    label: e.fields.Name,
+  }));
+
   return (
     <Fragment>
       <Button
@@ -158,41 +169,33 @@ export default function CreateProjet({ loaderData }: Route.ComponentProps) {
 
         <div className="flex flex-col gap-2">
           <Label htmlFor="etudiants">Étudiants associés</Label>
-          <select
+          <Select
             id="etudiants"
             name="etudiants"
-            multiple
-            className="border rounded p-2"
-          >
-            {etudiants.records.map((e: EtudiantResponse) => (
-              <option key={e.id} value={e.id}>
-                {e.fields.Name}
-              </option>
-            ))}
-          </select>
+            isMulti
+            options={etudiantOptions}
+            className="react-select-container"
+            classNamePrefix="react-select"
+          />
           {errors.etudiants && <p className="text-red-600 text-sm">{errors.etudiants}</p>}
         </div>
 
         <div className="flex flex-col gap-2">
           <Label htmlFor="technos">Technologies utilisées</Label>
-          <select
+          <Select
             id="technos"
             name="technos"
-            multiple
-            className="border rounded p-2"
-          >
-            {technos.records.map((t: TechnoResponse) => (
-              <option key={t.id} value={t.id}>
-                {t.fields.Nom}
-              </option>
-            ))}
-          </select>
+            isMulti
+            options={technoOptions}
+            className="react-select-container"
+            classNamePrefix="react-select"
+          />
           {errors.technos && <p className="text-red-600 text-sm">{errors.technos}</p>}
         </div>
 
         <div className="flex flex-col gap-2">
           <Label htmlFor="categorie">Catégorie du projet</Label>
-          <Select name="categorie">
+          <UISelect name="categorie">
             <SelectTrigger className="w-full">
               <SelectValue placeholder="Choisir une catégorie" />
             </SelectTrigger>
@@ -203,7 +206,7 @@ export default function CreateProjet({ loaderData }: Route.ComponentProps) {
                 </SelectItem>
               ))}
             </SelectContent>
-          </Select>
+          </UISelect>
           {errors.categorie && <p className="text-red-600 text-sm">{errors.categorie}</p>}
         </div>
 
