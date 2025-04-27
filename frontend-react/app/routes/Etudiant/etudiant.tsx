@@ -3,12 +3,10 @@ import { Fragment } from "react";
 import { Button } from "~/components/ui/button";
 import {
   Card,
-  CardDescription,
   CardFooter,
   CardHeader,
   CardTitle,
 } from "~/components/ui/card";
-import { OpenEye, Pencil } from "~/components";
 import { Link } from "react-router";
 import type { Route } from "./+types/etudiant";
 import DeleteEtudiant, { clientAction } from "./deleteEtudiant";
@@ -48,9 +46,6 @@ export default function Etudiant({ loaderData }: Route.ComponentProps) {
             <strong>Promotion :</strong>{" "}
             {currentPromotion || "Aucune promotion associée"}
           </p>
-          <p>
-            <strong>ID :</strong> {etudiant.id}
-          </p>
         </div>
 
         <div className="mt-6 flex gap-4">
@@ -58,11 +53,12 @@ export default function Etudiant({ loaderData }: Route.ComponentProps) {
             to={`/admin/etudiants/update/${etudiant.id}`}
             className="flex items-center gap-2 px-4 py-2 bg-yellow-400 text-white rounded hover:bg-yellow-500"
           >
-            <Pencil height={16} width={16} />
+            Modifier
           </Link>
           <DeleteEtudiant id={etudiant.id} />
         </div>
       </div>
+
       <h2 className="text-2xl font-semibold text-gray-800 mb-4">
         Projets associés
       </h2>
@@ -77,9 +73,6 @@ export default function Etudiant({ loaderData }: Route.ComponentProps) {
                 <CardTitle className="text-xl font-bold text-gray-800">
                   {projet.fields.Nom}
                 </CardTitle>
-                <CardDescription className="text-sm text-gray-500">
-                  ID: {projet.id}
-                </CardDescription>
               </CardHeader>
               <div className="mt-4 text-gray-600">
                 <p>
@@ -93,7 +86,7 @@ export default function Etudiant({ loaderData }: Route.ComponentProps) {
                   to={`/admin/projets/${projet.id}`}
                   className="p-3 rounded bg-green-600 hover:bg-green-700 text-white"
                 >
-                  <OpenEye height={20} width={20} />
+                  Voir le projet
                 </Link>
               </CardFooter>
             </Card>

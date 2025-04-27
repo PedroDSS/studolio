@@ -45,7 +45,7 @@ export default function CreateTechno() {
       <Button
         variant="outline"
         className="self-start mb-4"
-        onClick={() => (window.location.href = "/technos")}
+        onClick={() => (window.location.href = "/admin/technos")}
       >
         Retour à la liste
       </Button>

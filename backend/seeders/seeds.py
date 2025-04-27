@@ -16,5 +16,3 @@ async def seed_all():
 
 if __name__ == "__main__":
     asyncio.run(seed_all())
-
-# docker exec -it backend python3 -m seeders.seeds

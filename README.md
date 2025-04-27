@@ -46,16 +46,15 @@ Le projet est divisé en **deux parties** :
 
 ### Backend
 - **FastAPI** (API pour interagir avec Airtable)
-- **JWT + bcrypt** (authentification et sécurité des mots de passe)
+- **JWT + bcrypt + Jose** (authentification et sécurité des mots de passe)
 
 ### Base de Données
 - **Airtable** (Stockage des projets et interactions API)
 
 ### Frontend
-- **React (React Router v7)** (Interface admin)
-- **Nuxt.JS** (Portfolio)
+- **React (React Router v7)** (Portfolio et Interface admin)
 - **TailwindCSS** (Design moderne et responsive)
-- **Recharts / Chart.js** (Dashboard et statistiques)
+- **Chart.js** (Dashboard et statistiques)
 
 ### Autres
 - **.env.local** (Gestion des clés API en variables d'environnement)
@@ -67,31 +66,30 @@ Le projet est divisé en **deux parties** :
 
 ### Prérequis
 ```bash
-To be determined.
+# Cloner le projet.
+git clone git@github.com:PedroDSS/studolio.git
 ```
 
 ### Installation
 ```bash
-To be determined.
+docker compose build || docker compose up --build -d
 ```
 
 ### Configuration
 ```bash
-To be determined.
+# Remplir un .env en se basant sur le .env.local
 ```
 
 ### Lancer le projet
 ```bash
-To be determined.
-docker compose down && docker compose up --build -d
+docker compose up || docker compose up --build -d
 ```
 
 ### Remplir la base de données
 ```bash
-docker exec -it studolio_backend_1 /bin/sh
-bun seed
+# NOTE: il est possible qu'il ne soit plus fonctionnel.
+docker exec -it backend python3 -m seeders.seeds
 ```
 ---
 
 **Projet réalisé dans le cadre du cours Airtable Avancée - ESGI 5IW2**
-

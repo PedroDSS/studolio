@@ -38,9 +38,6 @@ export default function Admin({ loaderData }: Route.ComponentProps) {
           <p>
             <strong>Email :</strong> {admin.fields.Email}
           </p>
-          <p>
-            <strong>ID :</strong> {admin.id}
-          </p>
         </div>
 
         <div className="mt-6 flex gap-4">

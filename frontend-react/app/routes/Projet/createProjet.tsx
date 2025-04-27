@@ -1,12 +1,11 @@
-import { redirect, useFetcher } from "react-router";
+import { redirect, useFetcher, useNavigate } from "react-router";
 import type { Route } from "./+types/createProjet";
 import type {
   CategoryResponse,
   EtudiantResponse,
-  ProjetResponse,
   TechnoResponse,
 } from "~/interfaces/APIResponse";
-import { Fragment } from "react";
+import { Fragment, useState } from "react";
 import { Button } from "~/components/ui/button";
 import { Label } from "~/components/ui/label";
 import { Input } from "~/components/ui/input";
@@ -22,227 +21,205 @@ import {
 
 export async function clientLoader() {
   const token = sessionStorage.getItem("token");
-  if (!token) {
-    return redirect("/");
+  if (!token) return redirect("/");
+  const [airtableCategories, airtableTechnos, airtableStudents] = await Promise.all([
+    fetch(`${import.meta.env.VITE_BACKEND_API_URL}/categories/`, { headers: { Authorization: `Bearer ${token}` } }),
+    fetch(`${import.meta.env.VITE_BACKEND_API_URL}/technos/`, { headers: { Authorization: `Bearer ${token}` } }),
+    fetch(`${import.meta.env.VITE_BACKEND_API_URL}/etudiants/`, { headers: { Authorization: `Bearer ${token}` } }),
+  ]);
+  if (!airtableCategories.ok || !airtableTechnos.ok || !airtableStudents.ok) {
+    const err = (await (airtableCategories.ok ? airtableTechnos : airtableStudents).json()).detail;
+    throw new Error(err || "Une erreur est survenue.");
   }
-  const responseCategories = await fetch(
-    `${import.meta.env.VITE_BACKEND_API_URL}/categories/`,
-    {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    }
-  );
-  if (!responseCategories.ok) {
-    const errorData = await responseCategories.json();
-    throw new Error(errorData.detail || "Une erreur est survenue.");
-  }
-
-  const responseTechnos = await fetch(
-    `${import.meta.env.VITE_BACKEND_API_URL}/technos/`,
-    {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    }
-  );
-  if (!responseTechnos.ok) {
-    const errorData = await responseTechnos.json();
-    throw new Error(errorData.detail || "Une erreur est survenue.");
-  }
-
-  const responseEtudiants = await fetch(
-    `${import.meta.env.VITE_BACKEND_API_URL}/etudiants/`,
-    {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    }
-  );
-  if (!responseEtudiants.ok) {
-    const errorData = await responseEtudiants.json();
-    throw new Error(errorData.detail || "Une erreur est survenue.");
-  }
-
   return {
-    categories: await responseCategories.json(),
-    technos: await responseTechnos.json(),
-    etudiants: await responseEtudiants.json(),
+    categories: await airtableCategories.json(),
+    technos: await airtableTechnos.json(),
+    etudiants: await airtableStudents.json(),
   };
 }
 
 export async function clientAction({ request }: Route.ClientActionArgs) {
-  let formData = await request.formData();
+  const formData = await request.formData();
   const token = sessionStorage.getItem("token");
   if (formData.get("intent") === "create") {
-    const technos = formData.getAll("technos");
-    const etudiants = formData.getAll("etudiants");
-    const newProjet: ProjetResponse = await (
-      await fetch(`${import.meta.env.VITE_BACKEND_API_URL}/projets/`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify({
-          Nom: formData.get("nom"),
-          Description: formData.get("description"),
-          Mots: formData.get("mots"),
-          GitHub: formData.get("github"),
-          Catégorie: [formData.get("categorie")],
-          Technos: technos,
-          Étudiants: etudiants,
-        }),
-      })
-    ).json();
-    return redirect(`/admin/projets/${newProjet.id}`);
+    const technos = formData.getAll("technos") as string[];
+    const etudiants = formData.getAll("etudiants") as string[];
+    const categorie = formData.get("categorie") as string;
+    const published = formData.has("published");
+    const payload = {
+      Nom: formData.get("nom") as string,
+      Description: formData.get("description") as string,
+      Mots: formData.get("mots") as string,
+      GitHub: formData.get("github") as string,
+      Catégorie: [categorie],
+      Technos: technos,
+      Étudiants: etudiants,
+      Publié: published,
+    };
+
+    const res = await fetch(`${import.meta.env.VITE_BACKEND_API_URL}/projets/`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify(payload),
+    });
+    if (!res.ok) {
+      const errData = await res.json();
+      console.error("Erreur createProjet:", errData);
+      throw new Error(errData.detail || "Erreur à la création du projet");
+    }
+    return redirect(`/admin/projets`);
   }
 }
 
 export default function CreateProjet({ loaderData }: Route.ComponentProps) {
-  const createFetcher = useFetcher<typeof clientAction>();
-  let busy = createFetcher.state !== "idle";
-  const { categories, etudiants, technos } = loaderData;
+  const fetcher = useFetcher<typeof clientAction>();
+  const busy = fetcher.state !== "idle";
+  const { categories, technos, etudiants } = loaderData;
+  const navigate = useNavigate();
+
+  const [errors, setErrors] = useState<{ [key: string]: string }>({});
+
+  const handleSubmit = (event: React.FormEvent) => {
+    event.preventDefault();
+
+    const formData = new FormData(event.target as HTMLFormElement);
+    const nom = formData.get("nom");
+    const description = formData.get("description");
+    const mots = formData.get("mots");
+    const github = formData.get("github");
+    const technos = formData.getAll("technos");
+    const etudiants = formData.getAll("etudiants");
+    const categorie = formData.get("categorie");
+
+    const newErrors: { [key: string]: string } = {};
+
+    if (!nom) newErrors.nom = "Le nom du projet est obligatoire.";
+    if (!description) newErrors.description = "La description est obligatoire.";
+    if (!mots) newErrors.mots = "Le mot-clé est obligatoire.";
+    if (!github) newErrors.github = "Le lien GitHub est obligatoire.";
+    if (technos.length === 0) newErrors.technos = "Vous devez sélectionner au moins une technologie.";
+    if (etudiants.length === 0) newErrors.etudiants = "Vous devez sélectionner au moins un étudiant.";
+    if (!categorie) newErrors.categorie = "La catégorie du projet est obligatoire.";
+
+    if (Object.keys(newErrors).length > 0) {
+      setErrors(newErrors);
+      return;
+    }
+
+    fetcher.submit(event.target);
+  };
 
   return (
     <Fragment>
       <Button
         variant="outline"
         className="self-start mb-4"
-        onClick={() => (window.location.href = "/admin/projets")}
+        onClick={() => navigate("/admin/projets")}
       >
         Retour à la liste
       </Button>
       <h1 className="text-3xl font-bold text-gray-800 mb-6">
         Création d'un nouveau projet
       </h1>
-      <createFetcher.Form
+
+      <fetcher.Form
         method="post"
+        onSubmit={handleSubmit}
         className="flex flex-col gap-6 w-full max-w-lg mx-auto"
       >
         <input type="hidden" name="intent" value="create" />
+
         <div className="flex flex-col gap-2">
-          <Label htmlFor="nom" className="text-sm font-medium text-gray-700">
-            Nom du projet
-          </Label>
-          <Input
-            id="nom"
-            name="nom"
-            type="text"
-            placeholder="Entrez le nom du projet"
-            className="border-gray-300 focus:ring-green-500 focus:border-green-500"
-          />
+          <Label htmlFor="nom">Nom du projet</Label>
+          <Input id="nom" name="nom" placeholder="Entrez le nom" />
+          {errors.nom && <p className="text-red-600 text-sm">{errors.nom}</p>}
         </div>
+
         <div className="flex flex-col gap-2">
-          <Label
-            htmlFor="description"
-            className="text-sm font-medium text-gray-700"
-          >
-            Description du projet
-          </Label>
-          <Textarea
-            id="description"
-            name="description"
-            placeholder="Entrez la description du projet"
-            className="border-gray-300 focus:ring-green-500 focus:border-green-500"
-          />
+          <Label htmlFor="description">Description</Label>
+          <Textarea id="description" name="description" placeholder="Entrez la description" />
+          {errors.description && <p className="text-red-600 text-sm">{errors.description}</p>}
         </div>
+
         <div className="flex flex-col gap-2">
-          <Label htmlFor="mots" className="text-sm font-medium text-gray-700">
-            Mot-clé du projet
-          </Label>
-          <Input
-            id="mots"
-            name="mots"
-            type="text"
-            placeholder="Entrez le mot-clé du projet"
-            className="border-gray-300 focus:ring-green-500 focus:border-green-500"
-          />
+          <Label htmlFor="mots">Mot-clé</Label>
+          <Input id="mots" name="mots" placeholder="Entrez un mot-clé" />
+          {errors.mots && <p className="text-red-600 text-sm">{errors.mots}</p>}
         </div>
+
         <div className="flex flex-col gap-2">
-          <Label htmlFor="github" className="text-sm font-medium text-gray-700">
-            Lien GitHub du projet
-          </Label>
-          <Input
-            id="github"
-            name="github"
-            type="text"
-            placeholder="Entrez le lien github du projet"
-            className="border-gray-300 focus:ring-green-500 focus:border-green-500"
-          />
+          <Label htmlFor="github">Lien GitHub</Label>
+          <Input id="github" name="github" placeholder="Entrez le lien GitHub" />
+          {errors.github && <p className="text-red-600 text-sm">{errors.github}</p>}
         </div>
+
         <div className="flex flex-col gap-2">
-          <Label
-            htmlFor="etudiants"
-            className="text-sm font-medium text-gray-700"
-          >
-            Étudiants associés
-          </Label>
+          <Label htmlFor="etudiants">Étudiants associés</Label>
           <select
             id="etudiants"
             name="etudiants"
             multiple
-            className="border border-gray-300 rounded p-2 focus:ring-green-500 focus:border-green-500"
+            className="border rounded p-2"
           >
-            {etudiants.records.map((etudiant: EtudiantResponse) => (
-              <option key={etudiant.id} value={etudiant.id}>
-                {etudiant.fields.Name}
+            {etudiants.records.map((e: EtudiantResponse) => (
+              <option key={e.id} value={e.id}>
+                {e.fields.Name}
               </option>
             ))}
           </select>
+          {errors.etudiants && <p className="text-red-600 text-sm">{errors.etudiants}</p>}
         </div>
+
         <div className="flex flex-col gap-2">
-          <Label
-            htmlFor="technos"
-            className="text-sm font-medium text-gray-700"
-          >
-            Technologies utilisées
-          </Label>
+          <Label htmlFor="technos">Technologies utilisées</Label>
           <select
             id="technos"
             name="technos"
             multiple
-            className="border border-gray-300 rounded p-2 focus:ring-green-500 focus:border-green-500"
+            className="border rounded p-2"
           >
-            {technos.records.map((techno: TechnoResponse) => (
-              <option key={techno.id} value={techno.id}>
-                {techno.fields.Nom}
+            {technos.records.map((t: TechnoResponse) => (
+              <option key={t.id} value={t.id}>
+                {t.fields.Nom}
               </option>
             ))}
           </select>
+          {errors.technos && <p className="text-red-600 text-sm">{errors.technos}</p>}
         </div>
+
         <div className="flex flex-col gap-2">
-          <Label
-            htmlFor="promotion"
-            className="text-sm font-medium text-gray-700"
-          >
-            Catégorie du projet
-          </Label>
-          <Select name="promotion">
-            <SelectTrigger className="w-full h-12 px-3 bg-white border border-gray-300 rounded focus:ring-green-500 focus:border-green-500">
-              <SelectValue placeholder="Catégorie..." />
+          <Label htmlFor="categorie">Catégorie du projet</Label>
+          <Select name="categorie">
+            <SelectTrigger className="w-full">
+              <SelectValue placeholder="Choisir une catégorie" />
             </SelectTrigger>
             <SelectContent>
-              {categories.records.map((result: CategoryResponse) => (
-                <SelectItem key={result.id} value={result.id}>
-                  {result.fields.Nom}
+              {categories.records.map((c: CategoryResponse) => (
+                <SelectItem key={c.id} value={c.id}>
+                  {c.fields.Nom}
                 </SelectItem>
               ))}
             </SelectContent>
           </Select>
+          {errors.categorie && <p className="text-red-600 text-sm">{errors.categorie}</p>}
+        </div>
+
+        <div className="flex flex-col gap-2">
+          <Label htmlFor="published">Publié</Label>
+          <input type="checkbox" id="published" name="published" />
         </div>
 
         {busy ? (
           <Spinner />
         ) : (
-          <Button
-            type="submit"
-            className="bg-green-600 hover:bg-green-700 text-white"
-          >
+          <Button type="submit" className="bg-green-600 hover:bg-green-700 text-white">
             Créer le projet
           </Button>
         )}
-      </createFetcher.Form>
+      </fetcher.Form>
     </Fragment>
   );
 }

@@ -50,10 +50,8 @@ class AirtableService:
                 headers=self.headers,
                 json={"fields": data}
             )
-            if response.status_code == 201:
-                return response.json()
-            else:
-                raise Exception(f"Error creating record: {response.text}")
+            response.raise_for_status()
+            return response.json()
             
     async def batch_create(self, records: List[Dict[str, Any]]) -> Dict[str, Any]:
         """
@@ -68,10 +66,8 @@ class AirtableService:
                 headers=self.headers,
                 json={"records": batch_datas}
             )
-            if response.status_code == 200:
-                return response.json()
-            else:
-                raise Exception(f"Error creating records: {response.text}")
+            response.raise_for_status()
+            return response.json()
 
     async def update(self, record_id: str, data: Dict[str, Any]) -> Dict[str, Any]:
         """

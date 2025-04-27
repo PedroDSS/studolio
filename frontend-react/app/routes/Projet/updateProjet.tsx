@@ -1,4 +1,4 @@
-import { redirect, useFetcher } from "react-router";
+import { redirect, useFetcher, useNavigate } from "react-router";
 import type { Route } from "./+types/updateProjet";
 import type {
   CategoryResponse,
@@ -85,7 +85,7 @@ export async function clientAction({ request }: Route.ClientActionArgs) {
           Description: formData.get("description"),
           Mots: formData.get("mots"),
           GitHub: formData.get("github"),
-          Publié: formData.get("publié"),
+          Publié: formData.has("published"),
           Catégorie: [formData.get("categorie")],
           Technos: technos,
           Étudiants: etudiants,
@@ -99,13 +99,14 @@ export async function clientAction({ request }: Route.ClientActionArgs) {
 export default function UpdateProjet({ loaderData }: Route.ComponentProps) {
   const updateFetcher = useFetcher<typeof clientAction>();
   let busy = updateFetcher.state !== "idle";
+  const navigate = useNavigate();
   const { projet, categories, technos, etudiants } = loaderData;
   return (
     <Fragment>
       <Button
         variant="outline"
         className="self-start mb-4"
-        onClick={() => (window.location.href = "/admin/projets")}
+        onClick={() => navigate("/admin/projets")}
       >
         Retour à la liste
       </Button>
@@ -169,18 +170,8 @@ export default function UpdateProjet({ loaderData }: Route.ComponentProps) {
           />
         </div>
         <div className="flex flex-col gap-2">
-          <Label htmlFor="publié" className="text-sm font-medium text-gray-700">
-            Projet publié ?
-          </Label>
-          <select
-            id="publié"
-            name="publié"
-            defaultValue={projet.fields.Publié}
-            className="border border-gray-300 rounded p-2 focus:ring-green-500 focus:border-green-500"
-          >
-            <option value="False">Non</option>
-            <option value="True">Oui</option>
-          </select>
+          <Label htmlFor="published">Publié</Label>
+          <input type="checkbox" id="published" name="published" />
         </div>
         <div className="flex flex-col gap-2">
           <Label

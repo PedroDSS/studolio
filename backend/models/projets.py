@@ -7,7 +7,7 @@ class ProjetFields(BaseModel):
     Likes: int
     Mots: str
     GitHub: str
-    Publié: bool
+    Publié: Optional[bool] = None
     Catégorie: List[str]
     Technos: List[str]
     TechnosNames : List[str]
@@ -34,6 +34,7 @@ class CreateProjet(BaseModel):
     Catégorie: List[str]
     Technos: List[str]
     Étudiants: List[str]
+    Publié: bool
 
 
 class UpdateProjet(BaseModel):
@@ -41,7 +42,7 @@ class UpdateProjet(BaseModel):
     Description: str
     Mots: str
     GitHub: str
-    Publié: str
+    Publié: bool
     Catégorie: List[str]
     Technos: List[str]
     Étudiants: List[str]

@@ -63,7 +63,7 @@ export default function UpdateCategorie({ loaderData }: Route.ComponentProps) {
       <Button
         variant="outline"
         className="self-start mb-4"
-        onClick={() => (window.location.href = "/categories")}
+        onClick={() => (window.location.href = "/admin/categories")}
       >
         Retour à la liste
       </Button>

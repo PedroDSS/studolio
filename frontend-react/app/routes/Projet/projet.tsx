@@ -4,7 +4,7 @@ import clientLoader from "./getProjet";
 import { Fragment } from "react";
 import { Button } from "~/components/ui/button";
 import { Pencil, OpenEye } from "~/components";
-import { Link } from "react-router";
+import { Link, useNavigate } from "react-router";
 
 export { clientAction, clientLoader };
 
@@ -12,12 +12,14 @@ export default function Projet({ loaderData }: Route.ComponentProps) {
   const { projet, technos, etudiants, projetCategorie, commentaires } =
     loaderData;
 
+  const navigate = useNavigate();
+
   return (
     <Fragment>
       <Button
         variant="outline"
         className="mb-4 self-start"
-        onClick={() => (window.location.href = "/admin/projets")}
+        onClick={() => navigate("/admin/projets")}
       >
         Retour à la liste
       </Button>
@@ -29,7 +31,6 @@ export default function Projet({ loaderData }: Route.ComponentProps) {
           </h1>
           <p className="text-sm text-gray-500 mb-4">{projetCategorie}</p>
           <p className="text-gray-600 mb-4">{projet.fields.Description}</p>
-          <p className="text-gray-500 text-xs italic mb-4">ID : {projet.id}</p>
           <div className="text-gray-600 space-y-2">
             <p>
               <strong>GitHub :</strong>{" "}
@@ -43,11 +44,11 @@ export default function Projet({ loaderData }: Route.ComponentProps) {
               </a>
             </p>
             <p>
-              <strong>Likes :</strong> {projet.fields.Likes}
+              <strong>Likes : </strong>{projet.fields.Likes}
             </p>
             <p>
-              <strong>Publié :</strong>
-              {projet.fields.Publié === "True" ? "Oui" : "Non"}
+              <strong>Publié : </strong>
+              {projet.fields.Publié ? "Oui" : "Non"}
             </p>
             <p>
               <strong>Mots-clés :</strong> {projet.fields.Mots}

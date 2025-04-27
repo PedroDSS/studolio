@@ -50,6 +50,10 @@ async def get_projet(
     
     return projet
 
+@router.post("/", response_model=Projet, dependencies=[Depends(verify_token)], status_code=201)
+async def create_projet(projet: CreateProjet):
+    return await airtable.create(projet.dict())
+
 @router.post("/{id}/like", response_model=Projet)
 async def like_or_dislike_projet(id: str, action: LikeProjet):
     projet = await airtable.get_by_id(id)
@@ -67,10 +71,6 @@ async def like_or_dislike_projet(id: str, action: LikeProjet):
 
     updated_projet = await airtable.update(id, {"Likes": updated_likes})
     return updated_projet
-
-@router.post("/", response_model=Projet, dependencies=[Depends(verify_token)], status_code=201)
-async def create_projet(projet: CreateProjet):
-    return await airtable.create(projet.dict())
 
 @router.patch("/{id}", response_model=Projet, dependencies=[Depends(verify_token)])
 async def update_projet(id: str, projet: UpdateProjet):
