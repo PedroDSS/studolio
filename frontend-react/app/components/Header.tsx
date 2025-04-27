@@ -1,4 +1,4 @@
-import { NavLink, useNavigate } from "react-router";
+import { NavLink, useNavigate } from "react-router-dom";
 
 interface HeaderProps {
   navLinks: {
@@ -13,10 +13,11 @@ export function Header({ navLinks }: HeaderProps) {
   const handleLogout = () => {
     navigate("/logout");
   };
+
   return (
-    <header className="h-16 flex items-center justify-between px-6 shadow-md">
+    <header className="h-16 flex items-center justify-between px-6 shadow-md bg-white mb-8">
       <div className="flex items-center gap-4">
-        <span className="text-xl font-bold">Studolio</span>
+        <span className="text-2xl font-bold text-gray-800">Studolio</span>
       </div>
 
       <nav className="hidden md:flex gap-6">
@@ -25,8 +26,7 @@ export function Header({ navLinks }: HeaderProps) {
             key={index}
             to={navItem.link}
             className={({ isActive }) =>
-              `text-lg font-medium hover:text-gray-300 ${
-                isActive ? "underline underline-offset-4" : ""
+              `text-lg font-medium hover:text-gray-500 ${isActive ? "underline underline-offset-4" : ""
               }`
             }
           >
